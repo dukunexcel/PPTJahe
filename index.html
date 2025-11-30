@@ -110,7 +110,6 @@
 
 <div id="app" class="flex flex-col items-center p-4 sm:p-8">
     
-    <!-- HEADER: GRADASI HIJAU NEON & FOREST GREEN -->
     <header class="w-full max-w-6xl mb-12 z-10 relative">
         <div class="rounded-3xl relative p-8 md:p-12 text-center border border-[#9bca1a]/30 bg-gradient-to-br from-[#114e2c] to-[#9bca1a] shadow-[0_20px_50px_rgba(17,78,44,0.5)]">
             <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full mix-blend-overlay filter blur-3xl translate-x-1/3 -translate-y-1/3"></div>
@@ -131,20 +130,16 @@
                 
                 <div class="inline-flex flex-col items-center justify-center bg-black/20 backdrop-blur-md border border-white/20 rounded-2xl p-4 md:px-10 max-w-2xl mx-auto shadow-inner">
                     <p id="headerMonthYear" class="text-xl font-bold mb-1 text-white text-shadow-sm">
-                        <!-- Diisi JS -->
-                    </p>
+                        </p>
                     <p id="headerDateRange" class="text-sm font-medium text-green-50">
-                        <!-- Diisi JS -->
-                    </p>
+                        </p>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- SECTION 1 (BARIS 1): KPI UTAMA -->
     <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl mb-12 relative z-10">
         
-        <!-- 1. TOTAL PEMASUKAN -->
         <div class="card card-cyan p-6">
             <div class="glow-blob bg-cyan-500"></div>
             <div class="relative z-10">
@@ -164,7 +159,6 @@
             </div>
         </div>
 
-        <!-- 2. TOTAL PENGELUARAN -->
         <div class="card card-red p-6">
             <div class="glow-blob bg-rose-500"></div>
             <div class="relative z-10">
@@ -188,7 +182,6 @@
             </div>
         </div>
         
-        <!-- 3. ARUS KAS -->
         <div class="card card-purple p-6">
             <div class="glow-blob bg-purple-500"></div>
             <div class="relative z-10">
@@ -202,10 +195,8 @@
         
     </section>
     
-    <!-- SECTION 2 (BARIS 2): KPI 4 & 5 -->
     <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 w-full max-w-6xl mb-12 relative z-10">
         
-        <!-- 4. LABA KOTOR -->
         <div class="card card-green p-6">
             <div class="glow-blob bg-emerald-500"></div>
             <div class="relative z-10">
@@ -228,7 +219,6 @@
             </div>
         </div>
 
-        <!-- 5. NETTO -->
         <div class="card card-yellow p-6">
             <div class="glow-blob bg-amber-500"></div>
             <div class="relative z-10">
@@ -242,10 +232,8 @@
         
     </section>
 
-    <!-- SECTION 3: VISUALISASI UTAMA -->
     <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full max-w-6xl mb-8 relative z-10">
         
-        <!-- STACKED BAR CHART -->
         <div class="card p-6">
             <h2 class="text-lg font-bold text-gray-200 mb-4 border-b border-gray-800 pb-2">Komposisi Omset</h2>
             <div style="height: 350px; width: 100%;"> 
@@ -253,7 +241,6 @@
             </div>
         </div>
 
-        <!-- DOUGHNUT CHART -->
         <div class="card p-6">
             <h2 class="text-lg font-bold text-gray-200 mb-4 border-b border-gray-800 pb-2">Rasio Beban Operasional Pokok</h2>
             <div style="height: 350px; width: 100%;"> 
@@ -262,10 +249,8 @@
         </div>
     </section>
 
-    <!-- ANALISIS MARGIN -->
     <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full max-w-6xl mb-8 relative z-10">
         
-        <!-- Tabel Margin BPOM/NON-BPOM -->
         <div class="card p-6">
             <h2 class="text-lg font-bold text-gray-200 mb-4">Analisis Margin BPOM vs NON-BPOM</h2>
             <table class="w-full text-sm text-left border-collapse">
@@ -273,7 +258,6 @@
             </table>
         </div>
         
-        <!-- Tabel Margin ONLINE vs OFFLINE -->
         <div class="card p-6">
             <h2 class="text-lg font-bold text-gray-200 mb-4">Analisis Margin ONLINE vs OFFLINE</h2>
             <table class="w-full text-sm text-left border-collapse">
@@ -282,11 +266,9 @@
         </div>
     </section>
 
-    <!-- TABEL RINCIAN BEBAN -->
     <section class="w-full max-w-6xl card p-6 mb-8 relative z-10">
         <h2 class="text-lg font-bold text-gray-200 mb-3 border-b border-gray-800 pb-2">Rincian & Analisis Laba-Rugi</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Tabel Rincian Beban -->
             <div>
                 <h3 class="font-bold text-md mb-3 text-red-400 uppercase tracking-widest text-xs">Rincian Beban</h3>
                 <table class="w-full text-sm text-left text-gray-400 border-collapse">
@@ -299,7 +281,6 @@
                     <tbody id="bebanRincianBody"></tbody>
                 </table>
             </div>
-            <!-- Analisis Laba-Rugi -->
             <div>
                 <h3 class="font-bold text-md mb-3 text-cyan-400 uppercase tracking-widest text-xs">Analisis Laba-Rugi</h3>
                 <table class="w-full text-sm text-left text-gray-400 border-collapse">
@@ -410,10 +391,27 @@
         let formatted = 'Rp ' + formatRupiah(Math.abs(num));
         
         if (num < 0) {
+            // Ini menghasilkan tag <span> yang menyebabkan masalah di label chart
             return `<span class="text-red-400 font-medium">(${formatted})</span>`;
         }
         return `<span>${formatted}</span>`;
     }
+
+    /**
+     * @description Fungsi baru untuk formatting Rupiah KHUSUS untuk label chart (teks biasa tanpa HTML).
+     */
+    function formatRupiahText(angka) {
+        let num = Number(angka);
+        // Tampilkan sebagai nilai absolut
+        let formatted = 'Rp ' + formatRupiah(Math.abs(num));
+        
+        if (num < 0) {
+            // Tampilkan negatif dalam kurung (teks biasa)
+            return `(${formatted})`;
+        }
+        return formatted;
+    }
+
 
     // --- HELPER TABEL MARGIN ---
     function buildMarginRow(label, omset, hpp, color = 'indigo') {
@@ -455,6 +453,7 @@
     // KPI 2 (Pengeluaran)
     const opsLainItem = Array.isArray(DATA.bebanRincian) ? DATA.bebanRincian.find(item => item.uraian && (item.uraian.toLowerCase().includes("lain"))) : null;
     const opsLainValue = opsLainItem ? opsLainItem.jumlah : 0;
+    // opsPokokValue dihitung dari total opsNonPrive dikurangi Ops Lain-lain
     const opsPokokValue = DATA.opsNonPrive - opsLainValue;
 
     document.getElementById('belanjaBarang').innerHTML = formatAndColor(DATA.hppTotal, true);
@@ -563,7 +562,8 @@
 
     // 2. DOUGHNUT CHART (BEBAN)
     const bebanRincianFinal = Array.isArray(DATA.bebanRincian) ? DATA.bebanRincian : [];
-    const bebanLabels = bebanRincianFinal.map(b => b.uraian + ' (' + formatAndColor(b.jumlah) + ')');
+    // PERBAIKAN: Menggunakan formatRupiahText() yang baru agar label chart tidak menampilkan tag <span>
+    const bebanLabels = bebanRincianFinal.map(b => b.uraian + ' (' + formatRupiahText(b.jumlah) + ')');
     const bebanData = bebanRincianFinal.map(b => b.jumlah);
 
     const ctxBeban = document.getElementById('bebanChart').getContext('2d');
