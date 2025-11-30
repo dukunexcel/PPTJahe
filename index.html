@@ -361,9 +361,9 @@
         totalRetur: getNumericValue('total_retur'),
         totalPemasukan: getNumericValue('total_pemasukan'),
         
-        // HPP & Laba (Total) - Menggunakan key baru dari AppSheet
-        hppTotal: getNumericValue('hpp_total'), // Sesuai formula baru
-        labaKotor: getNumericValue('laba_kotor'), // Sesuai formula baru
+        // HPP & Laba (Total)
+        hppTotal: getNumericValue('hpp_total'), 
+        labaKotor: getNumericValue('laba_kotor'), 
         
         labaBersih: getNumericValue('laba_bersih'),
         opsNonPrive: getNumericValue('ops_non_prive'),
@@ -372,14 +372,13 @@
         totalPiutang: getNumericValue('total_piutang'),
         totalHutang: getNumericValue('total_hutang'),
         
-        // --- DATA RINCIAN CHART (Kunci Baru) ---
+        // --- DATA RINCIAN CHART (Kunci Baru sesuai Formula AppSheet) ---
         // BPOM
         hppBpom: getNumericValue('hpp_bpom'), 
         labaBpom: getNumericValue('laba_bpom'),
         omsetBpom: getNumericValue('omset_bpom'),
         
-        // NON-BPOM - PERBAIKAN DI SINI
-        // Sesuaikan dengan key yang dikirim appsheet: "&hpp_non_bpom="
+        // NON-BPOM (Menggunakan kunci dengan underscores)
         hppNonBpom: getNumericValue('hpp_non_bpom'), 
         labaNonBpom: getNumericValue('laba_non_bpom'),
         omsetNonBpom: getNumericValue('omset_non_bpom'),
@@ -419,7 +418,7 @@
     // --- HELPER TABEL MARGIN ---
     function buildMarginRow(label, omset, hpp, color = 'indigo') {
         // Hitung ulang jika omset 0 tapi ada HPP+Laba
-        if (omset === 0 && hpp > 0) omset = hpp + (DATA.labaKotor * (hpp/DATA.hppTotal)); // Estimasi kasar jika omset null
+        if (omset === 0 && hpp > 0) omset = hpp + (DATA.labaKotor * (hpp/DATA.hppTotal)); 
 
         const margin = omset - hpp;
         const marginPercent = omset !== 0 ? (margin / omset) * 100 : 0;
@@ -542,13 +541,18 @@
                             let index = context.dataIndex;
                             let totalOmsetKategori = hppData[index] + labaData[index];
                             let nilai = context.parsed.x; 
-                            let result = label + ': ' + formatAndColor(nilai);
+                            
+                            // [FIX] Gunakan formatRupiah (Teks Biasa) agar tidak muncul kode HTML <span>
+                            let result = label + ': Rp ' + formatRupiah(nilai);
+                            
                             if (label === 'Laba Kotor') {
                                 result += ` (${totalOmsetKategori !== 0 ? (labaData[index] / totalOmsetKategori * 100).toFixed(2) : 0}% Margin)`;
                             } else if (label === 'HPP') {
                                 result += ` (${totalOmsetKategori !== 0 ? (hppData[index] / totalOmsetKategori * 100).toFixed(2) : 0}% HPP)`;
                             }
-                            result += ' | Total Omset: ' + formatAndColor(totalOmsetKategori);
+                            
+                            // [FIX] Gunakan formatRupiah (Teks Biasa)
+                            result += ' | Total Omset: Rp ' + formatRupiah(totalOmsetKategori);
                             return result;
                         }
                     }
