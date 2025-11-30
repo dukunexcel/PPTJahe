@@ -341,13 +341,25 @@
     }
     
     function getBebanRincian() {
+        // Mengambil rincian Beban Pokok (G-T)
         const jsonString = params.get('beban_rincian');
         if (jsonString) {
             try { return JSON.parse(decodeURIComponent(jsonString)); } 
-            catch (e) { console.error("Error parsing JSON:", e); return []; }
+            catch (e) { console.error("Error parsing Beban-Rincian JSON:", e); return []; }
         }
         return []; 
     }
+
+    function getRincianOpsLainV() {
+        // Mengambil rincian Beban Lain-lain (V) dari VC baru
+        const jsonString = params.get('rincian_ops_lain_v');
+        if (jsonString) {
+            try { return JSON.parse(decodeURIComponent(jsonString)); } 
+            catch (e) { console.error("Error parsing V-Rincian JSON:", e); return []; }
+        }
+        return []; 
+    }
+
 
     const DATA = {
         // --- KPI UTAMA ---
@@ -359,9 +371,7 @@
         labaKotor: getNumericValue('laba_kotor'), 
         labaBersih: getNumericValue('laba_bersih'),
         
-        // PARAMETER BARU: Ops Lain-lain (Sandi V)
         opsLainLain: getNumericValue('ops_lain_lain'), 
-        // PARAMETER UTAMA: Total Operasional (Pokok + Lain-lain)
         opsNonPrive: getNumericValue('ops_non_prive'), 
         
         totalPengeluaran: getNumericValue('total_pengeluaran'),
@@ -369,7 +379,7 @@
         totalPiutang: getNumericValue('total_piutang'),
         totalHutang: getNumericValue('total_hutang'),
         
-        // --- DATA RINCIAN CHART ---
+        // --- DATA RINCIAN ---
         hppBpom: getNumericValue('hpp_bpom'), 
         labaBpom: getNumericValue('laba_bpom'),
         omsetBpom: getNumericValue('omset_bpom'),
@@ -383,8 +393,8 @@
         labaOnline: getNumericValue('laba_online'),
         omsetOnline: getNumericValue('hpp_online') + getNumericValue('laba_online'),
         
-        // BEBAN RINCIAN: HANYA BERISI G s.d. T
-        bebanRincian: getBebanRincian(),
+        bebanRincian: getBebanRincian(), // Rincian G-T
+        rincianOpsLainV: getRincianOpsLainV(), // Rincian V (BARU)
     };
 
     // --- HELPER FORMATTING ---
@@ -446,12 +456,12 @@
 
     // --- POPULATE DATA KE DOM ---
 
-    // A. PERHITUNGAN ULANG OPS POKOK
+    // A. PERHITUNGAN OPS POKOK
+    const opsLainValue = DATA.opsLainLain; 
     // opsPokokValue = Total Operasional (opsNonPrive) - Ops Lain-lain (V)
-    const opsLainValue = DATA.opsLainLain; // Mengambil langsung dari parameter baru
     const opsPokokValue = DATA.opsNonPrive - opsLainValue;
     
-    // Rincian Pokok (G-T) diambil dari DATA.bebanRincian yang sudah bersih
+    // Rincian Pokok (G-T)
     const bebanRincianPokok = DATA.bebanRincian; 
     
     // B. MAPPING KPI UTAMA
@@ -460,8 +470,8 @@
     document.getElementById('totalRetur').innerHTML = formatAndColor(DATA.totalRetur); 
 
     document.getElementById('belanjaBarang').innerHTML = formatAndColor(DATA.hppTotal, true);
-    document.getElementById('opsPokok').innerHTML = formatAndColor(opsPokokValue, true); // Ops Pokok (G-T)
-    document.getElementById('opsLain').innerHTML = formatAndColor(opsLainValue, true); // Ops Lain-lain (V)
+    document.getElementById('opsPokok').innerHTML = formatAndColor(opsPokokValue, true); 
+    document.getElementById('opsLain').innerHTML = formatAndColor(opsLainValue, true); 
     document.getElementById('totalPengeluaran').innerText = formatRupiah(DATA.totalPengeluaran);
 
     // KPI 3 (Arus Kas)
@@ -559,7 +569,6 @@
     });
 
     // 2. DOUGHNUT CHART (BEBAN POKOK G-T)
-    // DATA.bebanRincian kini hanya berisi G-T
     const bebanLabels = bebanRincianPokok.map(b => b.uraian + ' (' + formatRupiahText(b.jumlah) + ')');
     const bebanData = bebanRincianPokok.map(b => b.jumlah);
 
@@ -573,7 +582,7 @@
                 backgroundColor: [
                     '#FF1053', '#00FFFF', '#D400FF', '#60FF00', '#FFC700', '#00FF8C', 
                     '#FF7E00', '#7D00FF', '#FF00A6', '#00E6FF', '#CCFF00', '#FF005E',
-                    '#5e5eff', '#00ff7e', '#ffaa00', '#00ccff', '#e000ff' // Warna tambahan untuk Q, R, S, T
+                    '#5e5eff', '#00ff7e', '#ffaa00', '#00ccff', '#e000ff' 
                 ], 
                 borderWidth: 0,
                 hoverOffset: 10
@@ -603,7 +612,6 @@
             `;
         });
         
-        // MENGGUNAKAN opsPokokValue SEBAGAI TOTAL YANG BENAR
         bebanPokokBody.innerHTML += `
             <tr class="bg-white/5 font-bold border-t border-white/10">
                 <td class="px-3 py-2 text-gray-200">TOTAL BEBAN POKOK</td>
@@ -614,23 +622,32 @@
 
     // --- RENDER TABEL RINCIAN BEBAN LAIN-LAIN (SISI KANAN V) ---
     const bebanLainBody = document.getElementById('bebanRincianLainBody');
-    
-    if (opsLainValue === 0) {
-        bebanLainBody.innerHTML = `<tr><td colspan="2" class="px-3 py-2 text-center text-gray-500">Belum ada data beban operasional lain-lain (V)</td></tr>`;
+    const rincianOpsLainV = DATA.rincianOpsLainV; // Ambil data rincian V yang baru
+
+    let totalOpsLainDihitung = 0; 
+    let listRincianHTML = '';
+
+    if (rincianOpsLainV.length === 0) {
+        // Fallback jika tidak ada data V
+        bebanLainBody.innerHTML = `<tr><td colspan="2" class="px-3 py-2 text-center text-gray-500">Belum ada rincian beban operasional lain-lain (V)</td></tr>`;
     } else {
-        // Karena V hanya dikirim sebagai total, kita tampilkan dalam satu baris rincian dan satu baris total
-        bebanLainBody.innerHTML = `
-            <tr class="hover:bg-white/5 transition-colors">
-                <td class="px-3 py-2 text-gray-300">V. Operasional Lain-lain</td>
-                <td class="px-3 py-2 text-right">${formatAndColor(opsLainValue, true)}</td>
-            </tr>
-        `;
+        // 1. Render Rincian
+        rincianOpsLainV.forEach(item => {
+            totalOpsLainDihitung += item.jumlah; 
+            listRincianHTML += `
+                <tr class="hover:bg-white/5 transition-colors">
+                    <td class="px-3 py-2 text-gray-300">${item.uraian}</td>
+                    <td class="px-3 py-2 text-right">${formatAndColor(item.jumlah, true)}</td>
+                </tr>
+            `;
+        });
         
-        // Baris total
+        // 2. Gabungkan Rincian dan Total
+        bebanLainBody.innerHTML = listRincianHTML;
         bebanLainBody.innerHTML += `
             <tr class="bg-white/5 font-bold border-t border-white/10">
                 <td class="px-3 py-2 text-gray-200">TOTAL BEBAN LAIN-LAIN</td>
-                <td class="px-3 py-2 text-right text-gray-200">${formatAndColor(opsLainValue, true)}</td>
+                <td class="px-3 py-2 text-right text-gray-200">${formatAndColor(totalOpsLainDihitung, true)}</td>
             </tr>
         `;
     }
