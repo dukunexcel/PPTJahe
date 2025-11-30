@@ -9,13 +9,9 @@
     #app { 
         min-height: 100vh;
         background-color: #000000;
-        /* Linear Gradient Diagonal (135deg):
-           - 0%: Forest Green (#114e2c) - Nuansa dalam di kiri atas
-           - 40-60%: Hitam (#000000) - Area tengah gelap agar kartu konten terlihat jelas
-           - 100%: Neon Green (#9bca1a) - Aksen menyala di kanan bawah
-        */
+        /* Linear Gradient Diagonal (135deg): Forest Green (kiri atas) -> Hitam (tengah) -> Neon Green (kanan bawah) */
         background-image: linear-gradient(135deg, #114e2c 0%, #022c22 30%, #000000 60%, #9bca1a 100%);
-        background-attachment: fixed; /* Membuat background tetap statis saat scroll */
+        background-attachment: fixed;
         color: #e2e8f0;
     }
 
@@ -117,8 +113,6 @@
     <!-- HEADER: GRADASI HIJAU NEON & FOREST GREEN -->
     <header class="w-full max-w-6xl mb-12 z-10 relative">
         <div class="rounded-3xl relative p-8 md:p-12 text-center border border-[#9bca1a]/30 bg-gradient-to-br from-[#114e2c] to-[#9bca1a] shadow-[0_20px_50px_rgba(17,78,44,0.5)]">
-            
-            <!-- Dekorasi Abstrak halus di dalam header -->
             <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full mix-blend-overlay filter blur-3xl translate-x-1/3 -translate-y-1/3"></div>
             <div class="absolute bottom-0 left-0 w-64 h-64 bg-black opacity-20 rounded-full mix-blend-multiply filter blur-3xl -translate-x-1/3 translate-y-1/3"></div>
 
@@ -135,7 +129,6 @@
                     TOKO ALBAROKAH JAHE
                 </h1>
                 
-                <!-- Info Box dengan latar gelap transparan agar kontras dengan hijau terang -->
                 <div class="inline-flex flex-col items-center justify-center bg-black/20 backdrop-blur-md border border-white/20 rounded-2xl p-4 md:px-10 max-w-2xl mx-auto shadow-inner">
                     <p id="headerMonthYear" class="text-xl font-bold mb-1 text-white text-shadow-sm">
                         <!-- Diisi JS -->
@@ -151,7 +144,7 @@
     <!-- SECTION 1 (BARIS 1): KPI UTAMA -->
     <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl mb-12 relative z-10">
         
-        <!-- 1. TOTAL PEMASUKAN (Warna: CYAN) -->
+        <!-- 1. TOTAL PEMASUKAN -->
         <div class="card card-cyan p-6">
             <div class="glow-blob bg-cyan-500"></div>
             <div class="relative z-10">
@@ -171,7 +164,7 @@
             </div>
         </div>
 
-        <!-- 2. TOTAL PENGELUARAN (Warna: RED/CRIMSON) -->
+        <!-- 2. TOTAL PENGELUARAN -->
         <div class="card card-red p-6">
             <div class="glow-blob bg-rose-500"></div>
             <div class="relative z-10">
@@ -195,7 +188,7 @@
             </div>
         </div>
         
-        <!-- 3. ARUS KAS (Warna: PURPLE) -->
+        <!-- 3. ARUS KAS -->
         <div class="card card-purple p-6">
             <div class="glow-blob bg-purple-500"></div>
             <div class="relative z-10">
@@ -212,7 +205,7 @@
     <!-- SECTION 2 (BARIS 2): KPI 4 & 5 -->
     <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 w-full max-w-6xl mb-12 relative z-10">
         
-        <!-- 4. LABA KOTOR (Warna: GREEN/EMERALD) -->
+        <!-- 4. LABA KOTOR -->
         <div class="card card-green p-6">
             <div class="glow-blob bg-emerald-500"></div>
             <div class="relative z-10">
@@ -235,7 +228,7 @@
             </div>
         </div>
 
-        <!-- 5. NETTO (Warna: YELLOW/AMBER) -->
+        <!-- 5. NETTO -->
         <div class="card card-yellow p-6">
             <div class="glow-blob bg-amber-500"></div>
             <div class="relative z-10">
@@ -274,7 +267,7 @@
         
         <!-- Tabel Margin BPOM/NON-BPOM -->
         <div class="card p-6">
-            <h2 class="text-lg font-bold text-gray-200 mb-4">Margin BPOM vs NON-BPOM</h2>
+            <h2 class="text-lg font-bold text-gray-200 mb-4">Analisis Margin BPOM vs NON-BPOM</h2>
             <table class="w-full text-sm text-left border-collapse">
                 <tbody id="marginAnalysisBodyBpNom"></tbody>
             </table>
@@ -282,7 +275,7 @@
         
         <!-- Tabel Margin ONLINE vs OFFLINE -->
         <div class="card p-6">
-            <h2 class="text-lg font-bold text-gray-200 mb-4">Margin ONLINE vs OFFLINE</h2>
+            <h2 class="text-lg font-bold text-gray-200 mb-4">Analisis Margin ONLINE vs OFFLINE</h2>
             <table class="w-full text-sm text-left border-collapse">
                 <tbody id="marginAnalysisBodyOL"></tboady>
             </table>
@@ -335,28 +328,20 @@
     // --- FUNGSI PENGOLAHAN DATA ---
     const params = new URLSearchParams(window.location.search);
 
-    function getNumericValue(paramName, fallbackValue) {
-        // Cek dulu parameter spesifik yang diberikan user (misal: 'HPP_ONLINE')
+    function getNumericValue(paramName, fallbackValue = 0) {
+        // Cek parameter persis
         let urlValue = params.get(paramName);
         
-        // Jika tidak ketemu, coba versi lowercase (misal: 'hpp_online')
+        // Jika tidak ketemu, coba lowercase (antisipasi kesalahan ketik url)
         if (urlValue === null) {
             urlValue = params.get(paramName.toLowerCase());
         }
 
         if (urlValue) {
-            if (urlValue.includes(',')) {
-                let parts = urlValue.split(',');
-                let total = 0;
-                parts.forEach(part => {
-                    let cleanPart = String(part).replace(/[^0-9.-]/g, '');
-                    total += Number(cleanPart) || 0;
-                });
-                return total;
-            } else {
-                let cleaned = String(urlValue).replace(/[^0-9.-]/g, ''); 
-                return Number(cleaned);
-            }
+            // Hapus karakter non-digit selain titik dan minus
+            let cleaned = String(urlValue).replace(/[^0-9.-]/g, '');
+            let parsed = Number(cleaned);
+            return isNaN(parsed) ? fallbackValue : parsed;
         }
         return fallbackValue;
     }
@@ -365,81 +350,79 @@
         const jsonString = params.get('beban_rincian');
         if (jsonString) {
             try { return JSON.parse(decodeURIComponent(jsonString)); } 
-            catch (e) { console.error("Error parsing JSON:", e); return RAW_DATA.bebanRincian; }
+            catch (e) { console.error("Error parsing JSON:", e); return []; }
         }
-        return RAW_DATA.bebanRincian; 
+        return []; 
     }
 
-    const RAW_DATA = {
-        totalPenjualanKotor: 0, totalRetur: 0, totalPemasukan: 0, 
-        hppTotal: 0, opsNonPrive: 0, priveDiberikan: 0, 
-        totalPengeluaran: 0, labaKotor: 0, totalBeban: 0, labaBersih: 0, 
-        totalPiutang: 0, totalHutang: 0, 
-        hppBpom: 0, labaBpom: 0, hppNonBpom: 0, labaNonBpom: 0,
-        hppOffline: 0, labaOffline: 0, hppOnline: 0, labaOnline: 0, 
-        omsetBpom: 0, omsetNonBpom: 0, omsetOffline: 0, omsetOnline: 0, 
-        bebanRincian: []
-    };
-
     const DATA = {
-        // --- SECTION 1 & 2 KEYS ---
-        totalPenjualanKotor: getNumericValue('penjualan_kotor', RAW_DATA.totalPenjualanKotor),
-        totalRetur: getNumericValue('total_retur', RAW_DATA.totalRetur),
-        totalPemasukan: getNumericValue('total_pemasukan', RAW_DATA.totalPemasukan),
-        // Mapping HPP Total bulan ini (bisa dari hpp_total atau HPP_BULAN_INI)
-        hppTotal: getNumericValue('HPP_BULAN_INI', getNumericValue('hpp_total', RAW_DATA.hppTotal)),
+        // --- KPI UTAMA (SECTION 1 & 2) ---
+        totalPenjualanKotor: getNumericValue('penjualan_kotor'),
+        totalRetur: getNumericValue('total_retur'),
+        totalPemasukan: getNumericValue('total_pemasukan'),
         
-        // Mapping Laba Kotor (bisa dari laba_kotor atau Laba_Bulan_Ini)
-        labaKotor: getNumericValue('Laba_Bulan_Ini', getNumericValue('laba_kotor', RAW_DATA.labaKotor)),
+        // HPP & Laba (Total) - Menggunakan key baru dari AppSheet
+        hppTotal: getNumericValue('HPP_BULAN_INI', getNumericValue('hpp_total')), // Prioritas key baru
+        labaKotor: getNumericValue('Laba_Bulan_Ini', getNumericValue('laba_kotor')), // Prioritas key baru
         
-        labaBersih: getNumericValue('laba_bersih', RAW_DATA.labaBersih),
-        priveDiberikan: getNumericValue('prive_diberikan', RAW_DATA.priveDiberikan),
-        opsNonPrive: getNumericValue('ops_non_prive', RAW_DATA.opsNonPrive),
-        totalPengeluaran: getNumericValue('total_pengeluaran', RAW_DATA.totalPengeluaran),
-        arusKasBersih: getNumericValue('arus_kas_bersih', RAW_DATA.arusKasBersih),
-        totalPiutang: getNumericValue('total_piutang', RAW_DATA.totalPiutang),
-        totalHutang: getNumericValue('total_hutang', RAW_DATA.totalHutang),
+        labaBersih: getNumericValue('laba_bersih'),
+        opsNonPrive: getNumericValue('ops_non_prive'),
+        totalPengeluaran: getNumericValue('total_pengeluaran'),
+        arusKasBersih: getNumericValue('arus_kas_bersih'),
+        totalPiutang: getNumericValue('total_piutang'),
+        totalHutang: getNumericValue('total_hutang'),
         
-        // --- CHART DATA KEYS (Updated based on user request) ---
-        hppBpom: getNumericValue('HPP_BPOM', RAW_DATA.hppBpom), 
-        labaBpom: getNumericValue('Laba_BPOM', RAW_DATA.labaBpom),
-        omsetBpom: getNumericValue('OMSET_BPOM', RAW_DATA.omsetBpom),
+        // --- DATA RINCIAN CHART (Kunci Baru) ---
+        // BPOM
+        hppBpom: getNumericValue('HPP_BPOM'), 
+        labaBpom: getNumericValue('Laba_BPOM'),
+        omsetBpom: getNumericValue('OMSET_BPOM'),
         
-        hppNonBpom: getNumericValue('HPP_NONBPOM', RAW_DATA.hppNonBpom), 
-        labaNonBpom: getNumericValue('Laba_NONBPOM', RAW_DATA.labaNonBpom),
-        omsetNonBpom: getNumericValue('OMSET_NONBPOM', RAW_DATA.omsetNonBpom),
+        // NON-BPOM
+        hppNonBpom: getNumericValue('HPP_NONBPOM'), 
+        labaNonBpom: getNumericValue('Laba_NONBPOM'),
+        omsetNonBpom: getNumericValue('OMSET_NONBPOM'),
         
-        hppOffline: getNumericValue('HPP_OFFLINE', RAW_DATA.hppOffline), 
-        labaOffline: getNumericValue('LABA_OFFLINE', RAW_DATA.labaOffline),
+        // OFFLINE
+        hppOffline: getNumericValue('HPP_OFFLINE'), 
+        labaOffline: getNumericValue('LABA_OFFLINE'),
+        // Omset Offline (derived jika tidak ada parameter langsung)
+        omsetOffline: getNumericValue('HPP_OFFLINE') + getNumericValue('LABA_OFFLINE'),
         
-        hppOnline: getNumericValue('HPP_ONLINE', RAW_DATA.hppOnline), 
-        labaOnline: getNumericValue('LABA_ONLINE', RAW_DATA.labaOnline),
+        // ONLINE
+        hppOnline: getNumericValue('HPP_ONLINE'), 
+        labaOnline: getNumericValue('LABA_ONLINE'),
+        // Omset Online (derived)
+        omsetOnline: getNumericValue('HPP_ONLINE') + getNumericValue('LABA_ONLINE'),
         
         bebanRincian: getBebanRincian(),
     };
 
+    // --- HELPER FORMATTING ---
     function formatRupiah(angka) {
         if (!angka && angka !== 0) return '0';
-        let num = Number(angka);
-        if (isNaN(num)) return String(angka); 
-        return num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return Number(angka).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
     function formatAndColor(angka, isCost = false) {
         let num = Number(angka);
-        if (isCost && num > 0) num = -num; 
+        if (isCost && num > 0) num = -num; // Jika beban/HPP, jadikan negatif visual
         let formatted = 'Rp ' + formatRupiah(Math.abs(num));
+        
         if (num < 0) {
             return `<span class="text-red-400 font-medium">(${formatted})</span>`;
         }
         return `<span>${formatted}</span>`;
     }
 
+    // --- HELPER TABEL MARGIN ---
     function buildMarginRow(label, omset, hpp, color = 'indigo') {
+        // Hitung ulang jika omset 0 tapi ada HPP+Laba
+        if (omset === 0 && hpp > 0) omset = hpp + (DATA.labaKotor * (hpp/DATA.hppTotal)); // Estimasi kasar jika omset null
+
         const margin = omset - hpp;
         const marginPercent = omset !== 0 ? (margin / omset) * 100 : 0;
         
-        // Warna netral untuk tabel di bawah
         const bgClass = 'bg-white/5 text-gray-200';
         
         return `
@@ -462,12 +445,14 @@
         `;
     }
 
+    // --- POPULATE DATA KE DOM ---
+
     // A. SECTION 1 MAPPING
     document.getElementById('penjualanKotor').innerHTML = formatAndColor(DATA.totalPenjualanKotor);
     document.getElementById('totalRetur').innerHTML = formatAndColor(DATA.totalRetur); 
     document.getElementById('totalPemasukan').innerText = formatRupiah(DATA.totalPemasukan);
 
-    // KPI 2
+    // KPI 2 (Pengeluaran)
     const opsLainItem = Array.isArray(DATA.bebanRincian) ? DATA.bebanRincian.find(item => item.uraian && (item.uraian.toLowerCase().includes("lain"))) : null;
     const opsLainValue = opsLainItem ? opsLainItem.jumlah : 0;
     const opsPokokValue = DATA.opsNonPrive - opsLainValue;
@@ -477,7 +462,7 @@
     document.getElementById('opsLain').innerHTML = formatAndColor(opsLainValue, true);
     document.getElementById('totalPengeluaran').innerText = formatRupiah(DATA.totalPengeluaran);
 
-    // KPI 3
+    // KPI 3 (Arus Kas)
     document.getElementById('arusKasBersih').innerText = formatRupiah(DATA.arusKasBersih);
     document.getElementById('arusKasAnalisis').innerText = DATA.arusKasBersih >= 0 ? 'Cash Flow Positif' : 'Cash Flow Negatif';
 
@@ -497,11 +482,16 @@
     document.getElementById('hutangPiutangAnalisis').innerHTML = `Piutang: ${formatAndColor(DATA.totalPiutang)} | Hutang: ${formatAndColor(DATA.totalHutang, true)}`;
 
     
-    // C. GRAFIK STACKED BAR CHART
+    // --- GRAFIK CHART.JS ---
+    
+    // 1. STACKED BAR CHART (OMSET vs HPP)
     const barLabels = ['BPOM', 'NON-BPOM', 'OFFLINE', 'ONLINE'];
+    // Data HPP
     const hppData = [DATA.hppBpom, DATA.hppNonBpom, DATA.hppOffline, DATA.hppOnline];
+    // Data Laba
     const labaData = [DATA.labaBpom, DATA.labaNonBpom, DATA.labaOffline, DATA.labaOnline];
     
+    // Hitung max value untuk skala grafik
     const maxVal = Math.max(
         (DATA.hppBpom + DATA.labaBpom), 
         (DATA.hppNonBpom + DATA.labaNonBpom),
@@ -566,7 +556,7 @@
         }
     });
 
-    // DOUGHNUT CHART (Rainbow Neon)
+    // 2. DOUGHNUT CHART (BEBAN)
     const bebanRincianFinal = Array.isArray(DATA.bebanRincian) ? DATA.bebanRincian : [];
     const bebanLabels = bebanRincianFinal.map(b => b.uraian);
     const bebanData = bebanRincianFinal.map(b => b.jumlah);
@@ -591,6 +581,7 @@
         }
     });
 
+    // --- RENDER TABEL BEBAN ---
     const bebanBody = document.getElementById('bebanRincianBody');
     let totalBebanPokok = 0;
     
@@ -615,6 +606,7 @@
         `;
     }
 
+    // --- RENDER TABEL ANALISIS LABA RUGI ---
     const labaBody = document.getElementById('labaAnalisisBody');
     labaBody.innerHTML = `
         <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
@@ -639,6 +631,7 @@
         </tr>
     `;
 
+    // --- RENDER MARGIN TABLE 1 (BPOM vs NON-BPOM) ---
     const marginBodyBpNom = document.getElementById('marginAnalysisBodyBpNom');
     const marginRata = totalPemasukan !== 0 ? (labaKotor / totalPemasukan) * 100 : 0;
     
@@ -657,9 +650,8 @@
         </tr>
     `;
     
+    // --- RENDER MARGIN TABLE 2 (ONLINE vs OFFLINE) ---
     const marginBodyOL = document.getElementById('marginAnalysisBodyOL');
-    const omsetOfflineFinal = DATA.hppOffline + DATA.labaOffline;
-    const omsetOnlineFinal = DATA.hppOnline + DATA.labaOnline;
 
     marginBodyOL.innerHTML = `
         <thead>
@@ -668,8 +660,8 @@
                 <th class="px-3 py-2 text-right" colspan="2">Margin %</th>
             </tr>
         </thead>
-        ${buildMarginRow("OFFLINE", omsetOfflineFinal, DATA.hppOffline, 'green')}
-        ${buildMarginRow("ONLINE", omsetOnlineFinal, DATA.hppOnline, 'green')}
+        ${buildMarginRow("OFFLINE", DATA.omsetOffline, DATA.hppOffline, 'green')}
+        ${buildMarginRow("ONLINE", DATA.omsetOnline, DATA.hppOnline, 'green')}
         <tr class="bg-white/5 font-extrabold border-t border-white/20">
             <td class="px-3 py-2 text-gray-200" colspan="2">MARGIN RATA-RATA USAHA</td>
             <td class="px-3 py-2 text-right text-gray-200" colspan="2">${marginRata.toFixed(2)}%</td>
