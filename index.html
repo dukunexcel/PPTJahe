@@ -116,10 +116,6 @@
     
     <!-- HEADER: GRADASI HIJAU NEON & FOREST GREEN -->
     <header class="w-full max-w-6xl mb-12 z-10 relative">
-        <!-- 
-            Menerapkan bg-gradient-to-br from-[#114e2c] to-[#9bca1a] 
-            Menambahkan shadow berwarna hijau agar menyatu
-        -->
         <div class="rounded-3xl relative p-8 md:p-12 text-center border border-[#9bca1a]/30 bg-gradient-to-br from-[#114e2c] to-[#9bca1a] shadow-[0_20px_50px_rgba(17,78,44,0.5)]">
             
             <!-- Dekorasi Abstrak halus di dalam header -->
@@ -340,7 +336,14 @@
     const params = new URLSearchParams(window.location.search);
 
     function getNumericValue(paramName, fallbackValue) {
-        const urlValue = params.get(paramName);
+        // Cek dulu parameter spesifik yang diberikan user (misal: 'HPP_ONLINE')
+        let urlValue = params.get(paramName);
+        
+        // Jika tidak ketemu, coba versi lowercase (misal: 'hpp_online')
+        if (urlValue === null) {
+            urlValue = params.get(paramName.toLowerCase());
+        }
+
         if (urlValue) {
             if (urlValue.includes(',')) {
                 let parts = urlValue.split(',');
@@ -379,11 +382,16 @@
     };
 
     const DATA = {
+        // --- SECTION 1 & 2 KEYS ---
         totalPenjualanKotor: getNumericValue('penjualan_kotor', RAW_DATA.totalPenjualanKotor),
         totalRetur: getNumericValue('total_retur', RAW_DATA.totalRetur),
         totalPemasukan: getNumericValue('total_pemasukan', RAW_DATA.totalPemasukan),
-        hppTotal: getNumericValue('hpp_total', RAW_DATA.hppTotal),
-        labaKotor: getNumericValue('laba_kotor', RAW_DATA.labaKotor),
+        // Mapping HPP Total bulan ini (bisa dari hpp_total atau HPP_BULAN_INI)
+        hppTotal: getNumericValue('HPP_BULAN_INI', getNumericValue('hpp_total', RAW_DATA.hppTotal)),
+        
+        // Mapping Laba Kotor (bisa dari laba_kotor atau Laba_Bulan_Ini)
+        labaKotor: getNumericValue('Laba_Bulan_Ini', getNumericValue('laba_kotor', RAW_DATA.labaKotor)),
+        
         labaBersih: getNumericValue('laba_bersih', RAW_DATA.labaBersih),
         priveDiberikan: getNumericValue('prive_diberikan', RAW_DATA.priveDiberikan),
         opsNonPrive: getNumericValue('ops_non_prive', RAW_DATA.opsNonPrive),
@@ -391,16 +399,22 @@
         arusKasBersih: getNumericValue('arus_kas_bersih', RAW_DATA.arusKasBersih),
         totalPiutang: getNumericValue('total_piutang', RAW_DATA.totalPiutang),
         totalHutang: getNumericValue('total_hutang', RAW_DATA.totalHutang),
-        hppBpom: getNumericValue('hpp_bpom', RAW_DATA.hppBpom), 
-        labaBpom: getNumericValue('laba_bpom', RAW_DATA.labaBpom),
-        omsetBpom: getNumericValue('omset_bpom', RAW_DATA.omsetBpom),
-        hppNonBpom: getNumericValue('hpp_non_bpom', RAW_DATA.hppNonBpom), 
-        labaNonBpom: getNumericValue('laba_non_bpom', RAW_DATA.labaNonBpom),
-        omsetNonBpom: getNumericValue('omset_non_bpom', RAW_DATA.omsetNonBpom),
-        hppOffline: getNumericValue('hpp_offline', RAW_DATA.hppOffline), 
-        labaOffline: getNumericValue('laba_offline', RAW_DATA.labaOffline),
-        hppOnline: getNumericValue('hpp_online', RAW_DATA.hppOnline), 
-        labaOnline: getNumericValue('laba_online', RAW_DATA.labaOnline),
+        
+        // --- CHART DATA KEYS (Updated based on user request) ---
+        hppBpom: getNumericValue('HPP_BPOM', RAW_DATA.hppBpom), 
+        labaBpom: getNumericValue('Laba_BPOM', RAW_DATA.labaBpom),
+        omsetBpom: getNumericValue('OMSET_BPOM', RAW_DATA.omsetBpom),
+        
+        hppNonBpom: getNumericValue('HPP_NONBPOM', RAW_DATA.hppNonBpom), 
+        labaNonBpom: getNumericValue('Laba_NONBPOM', RAW_DATA.labaNonBpom),
+        omsetNonBpom: getNumericValue('OMSET_NONBPOM', RAW_DATA.omsetNonBpom),
+        
+        hppOffline: getNumericValue('HPP_OFFLINE', RAW_DATA.hppOffline), 
+        labaOffline: getNumericValue('LABA_OFFLINE', RAW_DATA.labaOffline),
+        
+        hppOnline: getNumericValue('HPP_ONLINE', RAW_DATA.hppOnline), 
+        labaOnline: getNumericValue('LABA_ONLINE', RAW_DATA.labaOnline),
+        
         bebanRincian: getBebanRincian(),
     };
 
