@@ -1,0 +1,541 @@
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    /* Styling Dasar dan Font Inter */
+    body { font-family: 'Inter', sans-serif; }
+    #app { min-height: 100vh; }
+    .card {
+        transition: transform 0.2s;
+        border-radius: 12px;
+    }
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+    .kpi-label { font-size: 0.8rem; }
+    .kpi-value { font-size: 2.5rem; }
+    
+    /* Style untuk Tabel Finansial */
+    .financial-table {
+        @apply w-full text-sm shadow-md rounded-xl;
+    }
+    .financial-table th, .financial-table td {
+        padding: 8px 12px;
+    }
+    .total-row {
+        @apply font-extrabold bg-indigo-100/70 text-indigo-800;
+    }
+    .negative-value {
+        @apply text-red-600;
+    }
+</style>
+
+<div id="app" class="bg-gray-50 flex flex-col items-center p-4 sm:p-8">
+    
+    <!-- Header dan Judul -->
+    <header class="w-full max-w-6xl text-center mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-indigo-700">
+            LAPORAN KINERJA DAN STRATEGI BULAN INI
+        </h1>
+        <p class="text-gray-500 mt-2">AL-BAROKAH JAHE: Fokus pada Efisiensi Margin dan Arus Kas</p>
+    </header>
+
+    <!-- SECTION 1 (BARIS 1): KPI 1, 2, 5 (3 KOLOM) -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl mb-12">
+        
+        <!-- Kiri: 1. TOTAL PEMASUKAN BERSIH -->
+        <div class="card bg-white p-6 shadow-lg border-b-4 border-blue-500">
+            <p class="kpi-label font-medium text-gray-500">1. TOTAL PEMASUKAN BERSIH</p>
+            <span class="kpi-value font-extrabold text-blue-700" id="totalPemasukan">Rp 0</span>
+            
+            <!-- Perbaikan Rincian Pemasukan -->
+            <div class="text-xs mt-3 space-y-1">
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Omset Kotor:</span>
+                    <span id="penjualanKotor">Rp 0</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Retur:</span>
+                    <span id="totalRetur">Rp 0</span>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- Tengah: 2. TOTAL PENGELUARAN -->
+        <div class="card bg-white p-6 shadow-lg border-b-4 border-red-500">
+            <p class="kpi-label font-medium text-gray-500">2. TOTAL PENGELUARAN</p>
+            <span class="kpi-value font-extrabold text-red-700" id="totalPengeluaran">Rp 0</span>
+            
+            <!-- Perbaikan Rincian Pengeluaran -->
+            <div class="text-xs mt-3 space-y-1">
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Belanja Barang:</span>
+                    <span id="belanjaBarang">Rp 0</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Prive Diberikan:</span>
+                    <span id="pemberianLaba">Rp 0</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Kanan: 3. ARUS KAS (OPERASI) -->
+        <div class="card bg-white p-6 shadow-lg border-b-4 border-blue-500">
+            <p class="kpi-label font-medium text-gray-500">3. ARUS KAS (OPERASI)</p>
+            <span class="kpi-value font-extrabold text-blue-700" id="arusKasBersih">Rp 0</span>
+            <p class="text-sm font-semibold text-gray-600 mt-1" id="arusKasAnalisis"></p>
+        </div>
+        
+    </section>
+    
+    <!-- SECTION 2 (BARIS 2): KPI 4, 5 (2 KOLOM) -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 w-full max-w-6xl mb-12">
+        
+        <!-- Kiri: 4. LABA KOTOR -->
+        <div class="card bg-white p-6 shadow-lg border-b-4 border-green-500">
+            <p class="kpi-label font-medium text-gray-500">4. LABA KOTOR BULAN INI</p>
+            <div class="flex justify-between items-end mt-2">
+                 <span class="kpi-value font-extrabold text-green-700" id="labaKotorNominal">Rp 0</span>
+                 <span class="text-xl font-bold text-green-500" id="labaKotorProsentase">0%</span>
+            </div>
+            <p class="text-xs text-gray-600 mt-1">Laba Bersih: <span id="labaBersihNominal">Rp 0</span></p>
+        </div>
+
+        <!-- Kanan: 5. Perbandingan Hutang Piutang -->
+        <div class="card bg-white p-6 shadow-lg border-b-4 border-yellow-500">
+            <p class="kpi-label font-medium text-gray-500">5. POSISI NETTO HUTANG/PIUTANG</p>
+            <span class="kpi-value font-extrabold text-yellow-700" id="posisiNetto">Rp 0</span>
+            <p class="text-sm font-semibold text-gray-600 mt-1" id="hutangPiutangAnalisis">Piutang: Rp 0 | Hutang: Rp 0</p>
+        </div>
+        
+    </section>
+
+
+    <!-- SECTION 3: VISUALISASI UTAMA: OMSET vs BEBAN (Bersebelahan) -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full max-w-6xl mb-8">
+        
+        <!-- Kiri: STACKED BAR CHART (OMSET / HPP / LABA) -->
+        <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Komposisi Omset: Laba Kotor vs. HPP (Bulan Ini)</h2>
+            <div style="height: 350px; width: 100%;"> 
+                <canvas id="omsetHppChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Kanan: RASIO BEBAN OPERASIONAL (DOUGHNUT) -->
+        <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Rasio Beban Operasional Pokok</h2>
+            <div style="height: 350px; width: 100%;"> 
+                <canvas id="bebanChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- ANALISIS MARGIN (Bersebelahan) -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full max-w-6xl mb-8">
+        
+        <!-- Kiri: Tabel Margin BPOM/NON-BPOM -->
+        <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Analisis Margin BPOM vs NON-BPOM</h2>
+            <table class="w-full text-sm text-left text-gray-500 border-collapse">
+                <tbody id="marginAnalysisBodyBpNom"></tbody>
+            </table>
+            <p class="text-xs text-gray-500 mt-4">Margin Kotor = (Omset - HPP) / Omset</p>
+        </div>
+        
+        <!-- Kanan: Tabel Margin ONLINE vs OFFLINE -->
+        <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Analisis Margin ONLINE vs OFFLINE</h2>
+            <table class="w-full text-sm text-left text-gray-500 border-collapse">
+                <tbody id="marginAnalysisBodyOL"></tboady>
+            </table>
+            <p class="text-xs text-gray-500 mt-4">Margin Kotor = (Omset - HPP) / Omset</p>
+        </div>
+    </section>
+
+    <!-- TABEL RINCIAN BEBAN DAN ANALISIS -->
+    <section class="w-full max-w-6xl bg-white p-6 rounded-xl shadow-lg mb-8">
+        <h2 class="text-xl font-semibold text-gray-700 mb-3">Rincian & Analisis Laba-Rugi</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Tabel Rincian Beban -->
+            <div>
+                <h3 class="font-bold text-lg mb-2 text-red-700">Rincian Beban Operasional Pokok</h3>
+                <table class="w-full text-sm text-left text-gray-500 border-collapse">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-3 py-2">Uraian</th>
+                            <th scope="col" class="px-3 py-2 text-right">Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bebanRincianBody">
+                        <!-- Data Beban akan diisi oleh JS -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- Analisis Laba-Rugi -->
+            <div>
+                <h3 class="font-bold text-lg mb-2 text-indigo-700">Analisis Laba-Rugi (Komposisi)</h3>
+                <table class="w-full text-sm text-left text-gray-500 border-collapse">
+                    <tbody id="labaAnalisisBody">
+                        <!-- Data Analisis akan diisi oleh JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    // FUNGSI UTAMA UNTUK MENGAMBIL DATA DARI URL ATAU MENGGUNAKAN RAW_DATA
+    const params = new URLSearchParams(window.location.search);
+
+    // Fungsi untuk mendapatkan nilai numerik dari URL atau RAW_DATA
+    function getNumericValue(paramName, fallbackValue) {
+        const urlValue = params.get(paramName);
+        if (urlValue) {
+            // Hapus semua karakter non-digit dan non-titik/koma
+            let cleaned = String(urlValue).replace(/[^0-9.]/g, ''); 
+            return Number(cleaned);
+        }
+        return fallbackValue;
+    }
+    
+    // Fungsi untuk mendapatkan data JSON Beban Rincian dari URL
+    function getBebanRincian() {
+        const jsonString = params.get('beban_rincian');
+        if (jsonString) {
+            try {
+                return JSON.parse(decodeURIComponent(jsonString));
+            } catch (e) {
+                console.error("Error parsing JSON for beban_rincian:", e);
+                return RAW_DATA.bebanRincian; // Fallback ke data mentah
+            }
+        }
+        return RAW_DATA.bebanRincian; // Fallback ke data mentah
+    }
+
+
+    // Data mentah (digunakan sebagai fallback dan sumber data untuk struktur)
+    const RAW_DATA = {
+        totalPenjualanKotor: 1181596524, totalRetur: 31353700, totalPemasukan: 1150242824, 
+        hppTotal: 1061655966, opsNonPrive: 20378396, priveDiberikan: 30000000, 
+        totalPengeluaran: 1061655966 + 20378396 + 30000000,
+        labaKotor: 88586858, totalBeban: 20378396, labaBersih: 88586858 - 20378396, 
+        totalPiutang: 131573844, totalHutang: 53474050, 
+
+        // Data Angka Rinci untuk Grafik dan Tabel
+        hppBpom: 153241428, labaBpom: 20017236, hppNonBpom: 908414538, labaNonBpom: 68569622,
+        hppOffline: 954615213, labaOffline: 73889029, hppOnline: 107040753, labaOnline: 14697829, 
+        omsetBpom: 173258664, omsetNonBpom: 976984160, omsetOffline: 954615213 + 73889029, omsetOnline: 107040753 + 14697829, 
+        
+        // Data Rincian Beban Operasional Pokok (Dipertahankan dari dokumen)
+        bebanRincian: [
+            { uraian: "Hasil Ndalem", jumlah: 5250000 },
+            { uraian: "Biaya Kost & Syahriyah", jumlah: 5440000 + 845000 },
+            { uraian: "Transport, Paket & Akomodasi", jumlah: 2587000 },
+            { uraian: "Biaya Listrik, Pulsa & Wifi", jumlah: 329046 + 692050 },
+            { uraian: "Perawatan Mobil", jumlah: 500000 },
+            { uraian: "Lain-lain (Roan, Sedekah, Bank)", jumlah: 947700 }, 
+        ],
+    };
+
+    // Objek Data Final yang Digunakan di Seluruh Script
+    const DATA = {
+        totalPenjualanKotor: getNumericValue('penjualan_kotor', RAW_DATA.totalPenjualanKotor),
+        totalRetur: getNumericValue('total_retur', RAW_DATA.totalRetur),
+        totalPemasukan: getNumericValue('total_pemasukan', RAW_DATA.totalPemasukan),
+        hppTotal: getNumericValue('hpp_total', RAW_DATA.hppTotal),
+        opsNonPrive: getNumericValue('ops_non_prive', RAW_DATA.opsNonPrive),
+        priveDiberikan: getNumericValue('prive_diberikan', RAW_DATA.priveDiberikan),
+        labaKotor: getNumericValue('laba_kotor', RAW_DATA.labaKotor),
+        labaBersih: getNumericValue('laba_bersih', RAW_DATA.labaBersih),
+        totalPiutang: getNumericValue('total_piutang', RAW_DATA.totalPiutang),
+        totalHutang: getNumericValue('total_hutang', RAW_DATA.totalHutang),
+        
+        // Menghitung Ulang Total Pengeluaran dan Arus Kas berdasarkan data yang diterima
+        totalPengeluaran: getNumericValue('total_pengeluaran', RAW_DATA.hppTotal + RAW_DATA.opsNonPrive + RAW_DATA.priveDiberikan),
+        arusKasBersih: getNumericValue('arus_kas_bersih', RAW_DATA.labaKotor - RAW_DATA.priveDiberikan),
+
+        // Data Grafik (Menggunakan Fallback atau data yang dikirim)
+        hppBpom: getNumericValue('hpp_bpom', RAW_DATA.hppBpom), labaBpom: getNumericValue('laba_bpom', RAW_DATA.labaBpom),
+        hppNonBpom: getNumericValue('hpp_non_bpom', RAW_DATA.hppNonBpom), labaNonBpom: getNumericValue('laba_non_bpom', RAW_DATA.labaNonBpom),
+        hppOffline: getNumericValue('hpp_offline', RAW_DATA.hppOffline), labaOffline: getNumericValue('laba_offline', RAW_DATA.labaOffline),
+        hppOnline: getNumericValue('hpp_online', RAW_DATA.hppOnline), labaOnline: getNumericValue('laba_online', RAW_DATA.labaOnline),
+        
+        omsetBpom: getNumericValue('omset_bpom', RAW_DATA.omsetBpom), omsetNonBpom: getNumericValue('omset_non_bpom', RAW_DATA.omsetNonBpom),
+        
+        bebanRincian: getBebanRincian(),
+    };
+
+
+    // Fungsi format Rupiah (tanpa memotong karakter, hanya memformat)
+    function formatRupiah(angka) {
+        if (!angka) return '0';
+        let num = Number(angka);
+        if (isNaN(num)) return String(angka); 
+        
+        return num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    // FUNGSI INI BARU DITAMBAHKAN: Format Rupiah dan Beri Warna
+    function formatAndColor(angka, isCost = false) {
+        let num = Number(angka);
+        let formatted = 'Rp ' + formatRupiah(Math.abs(num));
+        
+        if (num < 0 || isCost) {
+            // Untuk Retur (negatif) atau Biaya (pengeluaran)
+            return `<span class="text-red-600">(${formatted})</span>`;
+        }
+        return `<span>${formatted}</span>`;
+    }
+
+    // Helper function to calculate and build a margin table row
+    function buildMarginRow(label, omset, hpp, color = 'indigo') {
+        const margin = omset - hpp;
+        const marginPercent = (margin / omset) * 100;
+        
+        return `
+            <tr class="bg-${color}-50 font-bold">
+                <td class="px-3 py-2 text-gray-800" colspan="2">${label}</td>
+                <td class="px-3 py-2 text-right text-${color}-700" colspan="2">${marginPercent.toFixed(2)}%</td>
+            </tr>
+            <tr>
+                <td class="px-3 py-1 text-gray-600">Omset:</td>
+                <td class="px-3 py-1 text-right" colspan="3">${formatAndColor(omset)}</td>
+            </tr>
+            <tr>
+                <td class="px-3 py-1 text-gray-600">HPP:</td>
+                <td class="px-3 py-1 text-right" colspan="3">${formatAndColor(hpp, true)}</td>
+            </tr>
+            <tr class="border-b-2 border-gray-200">
+                <td class="px-3 py-1 text-green-700 font-semibold" colspan="2">Margin Kotor:</td>
+                <td class="px-3 py-1 text-right text-green-700 font-semibold" colspan="2">${formatAndColor(margin)}</td>
+            </tr>
+        `;
+    }
+
+    // ----------------------------------------------------
+    // PERHITUNGAN DAN PENGISIAN DATA
+    // ----------------------------------------------------
+
+    // A. SECTION 1 MAPPING (TOTAL PEMASUKAN, TOTAL PENGELUARAN, ARUS KAS)
+    
+    // KPI 1 - PEMASUKAN
+    document.getElementById('penjualanKotor').innerHTML = formatAndColor(DATA.totalPenjualanKotor);
+    document.getElementById('totalRetur').innerHTML = formatAndColor(-DATA.totalRetur); // Retur dibuat negatif
+    document.getElementById('totalPemasukan').innerText = formatRupiah(DATA.totalPemasukan);
+
+    // KPI 2 - PENGELUARAN
+    document.getElementById('belanjaBarang').innerHTML = formatAndColor(DATA.hppTotal, true);
+    document.getElementById('pemberianLaba').innerHTML = formatAndColor(DATA.priveDiberikan, true);
+    document.getElementById('totalPengeluaran').innerText = formatRupiah(DATA.totalPengeluaran);
+
+    // KPI 5 - ARUS KAS
+    document.getElementById('arusKasBersih').innerText = formatRupiah(DATA.arusKasBersih);
+    document.getElementById('arusKasAnalisis').innerText = DATA.arusKasBersih >= 0 ? 'Cash Flow Positif' : 'Cash Flow Negatif';
+
+    
+    // B. SECTION 2 MAPPING (LABA, NETTO)
+    
+    // KPI 3. LABA KOTOR
+    const labaKotor = DATA.labaKotor;
+    const totalPemasukan = DATA.totalPemasukan;
+    const marginProsentase = (labaKotor / totalPemasukan) * 100;
+    const labaBersih = DATA.labaBersih;
+
+    document.getElementById('labaKotorNominal').innerText = formatRupiah(labaKotor);
+    document.getElementById('labaKotorProsentase').innerText = marginProsentase.toFixed(2) + '%';
+    document.getElementById('labaBersihNominal').innerText = formatRupiah(labaBersih);
+    
+    // KPI 4. HUTANG/PIUTANG
+    const netto = DATA.totalPiutang - DATA.totalHutang;
+    document.getElementById('posisiNetto').innerText = formatRupiah(netto);
+    document.getElementById('hutangPiutangAnalisis').innerHTML = `Piutang: ${formatAndColor(DATA.totalPiutang)} | Hutang: ${formatAndColor(DATA.totalHutang, true)}`;
+
+    
+    // C. GRAFIK STACKED BAR CHART
+    const barLabels = ['BPOM', 'NON-BPOM', 'OFFLINE', 'ONLINE'];
+    const hppData = [DATA.hppBpom, DATA.hppNonBpom, DATA.hppOffline, DATA.hppOnline];
+    const labaData = [DATA.labaBpom, DATA.labaNonBpom, DATA.labaOffline, DATA.labaOnline];
+    const totalPemasukanMax = 1200000000; // Tetap sebagai patokan skala Y
+
+    const ctxOmsetHpp = document.getElementById('omsetHppChart').getContext('2d');
+    new Chart(ctxOmsetHpp, {
+        type: 'bar',
+        data: {
+            labels: barLabels,
+            datasets: [
+                {
+                    label: 'HPP',
+                    data: hppData,
+                    backgroundColor: 'rgba(239, 68, 68, 1)', 
+                    stack: 'Stack 0',
+                    order: 1, 
+                },
+                {
+                    label: 'Laba Kotor',
+                    data: labaData,
+                    backgroundColor: 'rgba(16, 185, 129, 1)', 
+                    stack: 'Stack 0',
+                    order: 2, 
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y', 
+            scales: {
+                x: {
+                    stacked: true,
+                    title: { display: true, text: 'Rupiah' }, 
+                    max: totalPemasukanMax, 
+                    ticks: {
+                        callback: function(value) {
+                            if (value >= 1000000000) return 'Rp ' + (value / 1000000000).toFixed(1) + ' M';
+                            if (value >= 1000000) return 'Rp ' + (value / 1000000).toFixed(0) + ' Jt';
+                            return value;
+                        }
+                    }
+                },
+                y: { stacked: true, grid: { display: false } }
+            },
+            plugins: {
+                title: { display: true, text: 'Komposisi Omset: Laba Kotor vs. HPP (Bulan Ini)' },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            let index = context.dataIndex;
+                            let totalOmsetKategori = hppData[index] + labaData[index];
+                            let nilai = context.parsed.x; 
+                            
+                            let result = label + ': ' + formatAndColor(nilai);
+                            
+                            if (label === 'Laba Kotor') {
+                                result += ` (${(labaData[index] / totalOmsetKategori * 100).toFixed(2)}% Margin)`;
+                            } else if (label === 'HPP') {
+                                result += ` (${(hppData[index] / totalOmsetKategori * 100).toFixed(2)}% HPP)`;
+                            }
+                            
+                            result += ' | Total Omset: ' + formatAndColor(totalOmsetKategori);
+                            return result;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // D. GRAFIK BEBAN OPERASIONAL (Doughnut Chart)
+    const bebanRincianFinal = DATA.bebanRincian; // Ambil data rincian beban yang sudah di-parse
+    const bebanLabels = bebanRincianFinal.map(b => b.uraian);
+    const bebanData = bebanRincianFinal.map(b => b.jumlah);
+
+    const ctxBeban = document.getElementById('bebanChart').getContext('2d');
+    new Chart(ctxBeban, {
+        type: 'doughnut',
+        data: {
+            labels: bebanLabels,
+            datasets: [{
+                data: bebanData,
+                backgroundColor: ['#f87171', '#3b82f6', '#10b981', '#f59e0b', '#6366f1', '#a855f7', '#ec4899'],
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { 
+                legend: { position: 'right' },
+                tooltip: { callbacks: { label: (context) => context.label + ': ' + formatAndColor(context.parsed) } }
+            }
+        }
+    });
+
+    // E. TABEL RINCIAN BEBAN DAN ANALISIS
+    const bebanBody = document.getElementById('bebanRincianBody');
+    let totalBebanPokok = 0;
+    bebanRincianFinal.forEach(item => {
+        totalBebanPokok += item.jumlah;
+        bebanBody.innerHTML += `
+            <tr class="bg-white border-b hover:bg-gray-50">
+                <td class="px-3 py-2">${item.uraian}</td>
+                <td class="px-3 py-2 text-right">${formatAndColor(item.jumlah, true)}</td>
+            </tr>
+        `;
+    });
+    // Tambah Total Beban
+    bebanBody.innerHTML += `
+        <tr class="bg-gray-100 font-bold">
+            <td class="px-3 py-2">TOTAL BEBAN POKOK</td>
+            <td class="px-3 py-2 text-right">${formatAndColor(totalBebanPokok, true)}</td>
+        </tr>
+    `;
+
+    // Tabel Analisis Laba-Rugi
+    const labaBody = document.getElementById('labaAnalisisBody');
+    labaBody.innerHTML = `
+        <tr class="bg-white border-b">
+            <td class="px-3 py-2">Total Pemasukan Bersih</td>
+            <td class="px-3 py-2 text-right">${formatAndColor(DATA.totalPemasukan)}</td>
+        </tr>
+        <tr class="bg-white border-b">
+            <td class="px-3 py-2">Total HPP</td>
+            <td class="px-3 py-2 text-right">${formatAndColor(DATA.hppTotal, true)}</td>
+        </tr>
+        <tr class="bg-gray-100 font-bold">
+            <td class="px-3 py-2">LABA KOTOR</td>
+            <td class="px-3 py-2 text-right">${formatAndColor(DATA.labaKotor)}</td>
+        </tr>
+        <tr class="bg-white border-b">
+            <td class="px-3 py-2">Total Beban Operasional</td>
+            <td class="px-3 py-2 text-right">${formatAndColor(DATA.opsNonPrive, true)}</td>
+        </tr>
+        <tr class="bg-indigo-100 font-bold text-green-700">
+            <td class="px-3 py-2">LABA BERSIH</td>
+            <td class="px-3 py-2 text-right">${formatAndColor(DATA.labaBersih)}</td>
+        </tr>
+    `;
+
+    // E. TABEL MARGIN (MENGISI DATA)
+    const marginBodyBpNom = document.getElementById('marginAnalysisBodyBpNom');
+    const marginRata = labaKotor / totalPemasukan;
+    marginBodyBpNom.innerHTML = `
+        <thead>
+            <tr>
+                <th class="px-3 py-2 bg-indigo-50 text-indigo-700" colspan="2">Kategori Produk</th>
+                <th class="px-3 py-2 bg-indigo-50 text-right text-indigo-700" colspan="2">Margin %</th>
+            </tr>
+        </thead>
+        ${buildMarginRow("NON-BPOM", DATA.omsetNonBpom, DATA.hppNonBpom, 'indigo')}
+        ${buildMarginRow("BPOM", DATA.omsetBpom, DATA.hppBpom, 'indigo')}
+        <tr class="bg-indigo-100 font-extrabold text-gray-900 border-t-4 border-indigo-500">
+            <td class="px-3 py-2" colspan="2">MARGIN RATA-RATA USAHA</td>
+            <td class="px-3 py-2 text-right" colspan="2">${marginProsentase.toFixed(2)}%</td>
+        </tr>
+    `;
+    
+    // B. Tabel ONLINE vs OFFLINE
+    const marginBodyOL = document.getElementById('marginAnalysisBodyOL');
+    const omsetOfflineFinal = DATA.hppOffline + DATA.labaOffline;
+    const omsetOnlineFinal = DATA.hppOnline + DATA.labaOnline;
+
+    marginBodyOL.innerHTML = `
+        <thead>
+            <tr>
+                <th class="px-3 py-2 bg-green-50 text-green-700" colspan="2">Kanal Penjualan</th>
+                <th class="px-3 py-2 bg-green-50 text-right text-green-700" colspan="2">Margin %</th>
+            </tr>
+        </thead>
+        ${buildMarginRow("OFFLINE", omsetOfflineFinal, DATA.hppOffline, 'green')}
+        ${buildMarginRow("ONLINE", omsetOnlineFinal, DATA.hppOnline, 'green')}
+        <tr class="bg-green-100 font-extrabold text-gray-900 border-t-4 border-green-500">
+            <td class="px-3 py-2" colspan="2">MARGIN RATA-RATA USAHA</td>
+            <td class="px-3 py-2 text-right" colspan="2">${marginProsentase.toFixed(2)}%</td>
+        </tr>
+    `;
+
+</script>
