@@ -44,40 +44,40 @@
 
     /* 3. VARIASI WARNA KARTU */
     /* Variasi A: CYAN (Pemasukan) */
-    .card-cyan { border-top: 4px solid #06b6d4; }
+    .card-cyan { border-top: 4px solid #00FFFF; }
     .card-cyan:hover {
         box-shadow: 0 0 30px rgba(6, 182, 212, 0.15);
         border-color: rgba(6, 182, 212, 0.4);
         transform: translateY(-5px);
     }
-    .text-cyan-neon { color: #22d3ee; text-shadow: 0 0 15px rgba(34, 211, 238, 0.4); }
+    .text-cyan-neon { color: #00FFFF; text-shadow: 0 0 15px rgba(34, 211, 238, 0.4); }
 
     /* Variasi B: RED/CRIMSON (Pengeluaran) */
-    .card-red { border-top: 4px solid #f43f5e; }
+    .card-red { border-top: 4px solid #FF1053; }
     .card-red:hover {
         box-shadow: 0 0 30px rgba(244, 63, 94, 0.15);
         border-color: rgba(244, 63, 94, 0.4);
         transform: translateY(-5px);
     }
-    .text-red-neon { color: #fb7185; text-shadow: 0 0 15px rgba(251, 113, 133, 0.4); }
+    .text-red-neon { color: #FF1053; text-shadow: 0 0 15px rgba(251, 113, 133, 0.4); }
 
     /* Variasi C: PURPLE (Arus Kas) */
-    .card-purple { border-top: 4px solid #8b5cf6; }
+    .card-purple { border-top: 4px solid #D400FF; }
     .card-purple:hover {
         box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
         border-color: rgba(139, 92, 246, 0.4);
         transform: translateY(-5px);
     }
-    .text-purple-neon { color: #a78bfa; text-shadow: 0 0 15px rgba(167, 139, 250, 0.4); }
+    .text-purple-neon { color: #D400FF; text-shadow: 0 0 15px rgba(167, 139, 250, 0.4); }
 
     /* Variasi D: GREEN (Laba) */
-    .card-green { border-top: 4px solid #10b981; }
+    .card-green { border-top: 4px solid #60FF00; }
     .card-green:hover {
         box-shadow: 0 0 30px rgba(16, 185, 129, 0.15);
         border-color: rgba(16, 185, 129, 0.4);
         transform: translateY(-5px);
     }
-    .text-green-neon { color: #34d399; text-shadow: 0 0 15px rgba(52, 211, 153, 0.4); }
+    .text-green-neon { color: #60FF00; text-shadow: 0 0 15px rgba(52, 211, 153, 0.4); }
 
     /* Variasi E: YELLOW/AMBER (Hutang/Piutang) */
     .card-yellow { border-top: 4px solid #f59e0b; }
@@ -86,7 +86,7 @@
         border-color: rgba(245, 158, 11, 0.4);
         transform: translateY(-5px);
     }
-    .text-yellow-neon { color: #fbbf24; text-shadow: 0 0 15px rgba(251, 191, 36, 0.4); }
+    .text-yellow-neon { color: #FFC700; text-shadow: 0 0 15px rgba(251, 191, 36, 0.4); }
 
 
     /* Typography & Utilities */
@@ -573,7 +573,7 @@
             labels: bebanLabels,
             datasets: [{
                 data: bebanData,
-                backgroundColor: ['#f43f5e', '#06b6d4', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#6366f1', '#a855f7', '#3b82f6', '#14b8a6', '#f97316', '#eab308', '#84cc16', '#22c55e'], // Updated colors for more items
+                backgroundColor: [ '#FF1053',     '#00FFFF',     '#D400FF',     '#60FF00',     '#FFC700',     '#00FF8C',     '#FF7E00',     '#7D00FF',     '#FF00A6',     '#00E6FF',     '#CCFF00',     '#FF005E' ], // Updated colors for more items
                 borderWidth: 0,
                 hoverOffset: 10
             }]
@@ -674,3 +674,4 @@
     `;
 
 </script>
+
