@@ -362,8 +362,8 @@
         totalPemasukan: getNumericValue('total_pemasukan'),
         
         // HPP & Laba (Total) - Menggunakan key baru dari AppSheet
-        hppTotal: getNumericValue('HPP_BULAN_INI', getNumericValue('hpp_total')), // Prioritas key baru
-        labaKotor: getNumericValue('Laba_Bulan_Ini', getNumericValue('laba_kotor')), // Prioritas key baru
+        hppTotal: getNumericValue('hpp_total'), // Sesuai formula baru
+        labaKotor: getNumericValue('laba_kotor'), // Sesuai formula baru
         
         labaBersih: getNumericValue('laba_bersih'),
         opsNonPrive: getNumericValue('ops_non_prive'),
@@ -374,26 +374,27 @@
         
         // --- DATA RINCIAN CHART (Kunci Baru) ---
         // BPOM
-        hppBpom: getNumericValue('HPP_BPOM'), 
-        labaBpom: getNumericValue('Laba_BPOM'),
-        omsetBpom: getNumericValue('OMSET_BPOM'),
+        hppBpom: getNumericValue('hpp_bpom'), 
+        labaBpom: getNumericValue('laba_bpom'),
+        omsetBpom: getNumericValue('omset_bpom'),
         
-        // NON-BPOM
-        hppNonBpom: getNumericValue('HPP_NONBPOM'), 
-        labaNonBpom: getNumericValue('Laba_NONBPOM'),
-        omsetNonBpom: getNumericValue('OMSET_NONBPOM'),
+        // NON-BPOM - PERBAIKAN DI SINI
+        // Sesuaikan dengan key yang dikirim appsheet: "&hpp_non_bpom="
+        hppNonBpom: getNumericValue('hpp_non_bpom'), 
+        labaNonBpom: getNumericValue('laba_non_bpom'),
+        omsetNonBpom: getNumericValue('omset_non_bpom'),
         
         // OFFLINE
-        hppOffline: getNumericValue('HPP_OFFLINE'), 
-        labaOffline: getNumericValue('LABA_OFFLINE'),
+        hppOffline: getNumericValue('hpp_offline'), 
+        labaOffline: getNumericValue('laba_offline'),
         // Omset Offline (derived jika tidak ada parameter langsung)
-        omsetOffline: getNumericValue('HPP_OFFLINE') + getNumericValue('LABA_OFFLINE'),
+        omsetOffline: getNumericValue('hpp_offline') + getNumericValue('laba_offline'),
         
         // ONLINE
-        hppOnline: getNumericValue('HPP_ONLINE'), 
-        labaOnline: getNumericValue('LABA_ONLINE'),
+        hppOnline: getNumericValue('hpp_online'), 
+        labaOnline: getNumericValue('laba_online'),
         // Omset Online (derived)
-        omsetOnline: getNumericValue('HPP_ONLINE') + getNumericValue('LABA_ONLINE'),
+        omsetOnline: getNumericValue('hpp_online') + getNumericValue('laba_online'),
         
         bebanRincian: getBebanRincian(),
     };
