@@ -563,7 +563,7 @@
 
     // 2. DOUGHNUT CHART (BEBAN)
     const bebanRincianFinal = Array.isArray(DATA.bebanRincian) ? DATA.bebanRincian : [];
-    const bebanLabels = bebanRincianFinal.map(b => b.uraian);
+    const bebanLabels = bebanRincianFinal.map(b => b.uraian + ' (' + formatAndColor(b.jumlah) + ')');
     const bebanData = bebanRincianFinal.map(b => b.jumlah);
 
     const ctxBeban = document.getElementById('bebanChart').getContext('2d');
