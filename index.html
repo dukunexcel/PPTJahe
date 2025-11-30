@@ -310,8 +310,8 @@
 
 <script>
     // --- KONFIGURASI CHART.JS GLOBAL UNTUK TEMA GELAP ---
-    Chart.defaults.color = '#94a3b8'; 
-    Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.05)'; 
+    Chart.defaults.color = '#94a3b8'; // Label abu-abu
+    Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.05)'; // Grid lines sangat tipis
     
     // --- SCRIPT LOGIKA TANGGAL ---
     const today = new Date();
@@ -327,12 +327,16 @@
     const params = new URLSearchParams(window.location.search);
 
     function getNumericValue(paramName, fallbackValue = 0) {
+        // Cek parameter persis
         let urlValue = params.get(paramName);
+        
+        // Jika tidak ketemu, coba lowercase (antisipasi kesalahan ketik url)
         if (urlValue === null) {
             urlValue = params.get(paramName.toLowerCase());
         }
 
         if (urlValue) {
+            // Hapus karakter non-digit selain titik dan minus
             let cleaned = String(urlValue).replace(/[^0-9.-]/g, '');
             let parsed = Number(cleaned);
             return isNaN(parsed) ? fallbackValue : parsed;
@@ -350,30 +354,38 @@
         return []; 
     }
 
+    // FUNGSI BARU UNTUK MENGAMBIL RINCIAN SANDI V
     function getRincianOpsLainV() {
-        // Mengambil rincian Beban Lain-lain (V) dari VC baru
+        // Mengambil rincian Beban Lain-lain (V) dari parameter rincian_ops_lain_v
         const jsonString = params.get('rincian_ops_lain_v');
         if (jsonString) {
-            try { return JSON.parse(decodeURIComponent(jsonString)); } 
-            catch (e) { console.error("Error parsing V-Rincian JSON:", e); return []; }
+            try { 
+                // Perlu menghapus spasi di dalam string JSON sebelum parse, 
+                // karena AppSheet sering menambahkan spasi setelah koma.
+                const cleanString = decodeURIComponent(jsonString).replace(/, \s*/g, ',');
+                return JSON.parse(cleanString); 
+            } 
+            catch (e) { 
+                console.error("Error parsing V-Rincian JSON:", e); 
+                return []; 
+            }
         }
         return []; 
     }
 
-
     const DATA = {
-        // --- KPI UTAMA ---
+        // --- KPI UTAMA (SECTION 1 & 2) ---
         totalPenjualanKotor: getNumericValue('penjualan_kotor'),
         totalRetur: getNumericValue('total_retur'),
         totalPemasukan: getNumericValue('total_pemasukan'),
         
+        // HPP & Laba (Total)
         hppTotal: getNumericValue('hpp_total'), 
         labaKotor: getNumericValue('laba_kotor'), 
+        
         labaBersih: getNumericValue('laba_bersih'),
-        
-        opsLainLain: getNumericValue('ops_lain_lain'), 
-        opsNonPrive: getNumericValue('ops_non_prive'), 
-        
+        opsLainLain: getNumericValue('ops_lain_lain'), // Total V
+        opsNonPrive: getNumericValue('ops_non_prive'), // Total G-T + V
         totalPengeluaran: getNumericValue('total_pengeluaran'),
         arusKasBersih: getNumericValue('arus_kas_bersih'),
         totalPiutang: getNumericValue('total_piutang'),
@@ -405,15 +417,17 @@
 
     function formatAndColor(angka, isCost = false) {
         let num = Number(angka);
-        if (isCost && num > 0) num = -num; 
+        if (isCost && num > 0) num = -num; // Jika beban/HPP, jadikan negatif visual
         let formatted = 'Rp ' + formatRupiah(Math.abs(num));
         
         if (num < 0) {
+            // Menggunakan palet neon (disesuaikan dengan skrip baru)
             return `<span class="text-red-neon font-medium">(${formatted})</span>`;
         }
         return `<span>${formatted}</span>`;
     }
-
+    
+    // Fungsi khusus untuk chart label (tanpa tag HTML)
     function formatRupiahText(angka) {
         let num = Number(angka);
         let formatted = 'Rp ' + formatRupiah(Math.abs(num));
@@ -427,6 +441,7 @@
 
     // --- HELPER TABEL MARGIN ---
     function buildMarginRow(label, omset, hpp, color = 'indigo') {
+        // Hitung ulang jika omset 0 tapi ada HPP+Laba
         if (omset === 0 && hpp > 0) omset = hpp + (DATA.labaKotor * (hpp/DATA.hppTotal)); 
 
         const margin = omset - hpp;
@@ -448,8 +463,8 @@
                 <td class="px-3 py-1 text-right text-gray-300" colspan="3">${formatAndColor(hpp, true)}</td>
             </tr>
             <tr class="border-b border-gray-800">
-                <td class="px-3 py-1 text-green-neon font-semibold" colspan="2">Margin Kotor:</td>
-                <td class="px-3 py-1 text-right text-green-neon font-semibold" colspan="2">${formatAndColor(margin)}</td>
+                <td class="px-3 py-1 text-emerald-400 font-semibold" colspan="2">Margin Kotor:</td>
+                <td class="px-3 py-1 text-right text-emerald-400 font-semibold" colspan="2">${formatAndColor(margin)}</td>
             </tr>
         `;
     }
@@ -457,24 +472,23 @@
     // --- POPULATE DATA KE DOM ---
 
     // A. PERHITUNGAN OPS POKOK
-    const opsLainValue = DATA.opsLainLain; 
-    // opsPokokValue = Total Operasional (opsNonPrive) - Ops Lain-lain (V)
+    const opsLainValue = DATA.opsLainLain; // Total V
+    // Ops Pokok = Total Operasional (opsNonPrive) - Ops Lain-lain (V)
     const opsPokokValue = DATA.opsNonPrive - opsLainValue;
     
     // Rincian Pokok (G-T)
     const bebanRincianPokok = DATA.bebanRincian; 
     
     // B. MAPPING KPI UTAMA
-    document.getElementById('totalPemasukan').innerText = formatRupiah(DATA.totalPemasukan);
     document.getElementById('penjualanKotor').innerHTML = formatAndColor(DATA.totalPenjualanKotor);
     document.getElementById('totalRetur').innerHTML = formatAndColor(DATA.totalRetur); 
+    document.getElementById('totalPemasukan').innerText = formatRupiah(DATA.totalPemasukan);
 
     document.getElementById('belanjaBarang').innerHTML = formatAndColor(DATA.hppTotal, true);
     document.getElementById('opsPokok').innerHTML = formatAndColor(opsPokokValue, true); 
     document.getElementById('opsLain').innerHTML = formatAndColor(opsLainValue, true); 
     document.getElementById('totalPengeluaran').innerText = formatRupiah(DATA.totalPengeluaran);
 
-    // KPI 3 (Arus Kas)
     document.getElementById('arusKasBersih').innerText = formatRupiah(DATA.arusKasBersih);
     document.getElementById('arusKasAnalisis').innerText = DATA.arusKasBersih >= 0 ? 'Cash Flow Positif' : 'Cash Flow Negatif';
 
@@ -516,15 +530,15 @@
                 {
                     label: 'HPP',
                     data: hppData,
-                    backgroundColor: 'rgba(255, 16, 83, 0.7)', 
-                    hoverBackgroundColor: 'rgba(255, 16, 83, 1)',
+                    backgroundColor: 'rgba(244, 63, 94, 0.7)', 
+                    hoverBackgroundColor: 'rgba(244, 63, 94, 1)',
                     stack: 'Stack 0', order: 1, 
                 },
                 {
                     label: 'Laba Kotor',
                     data: labaData,
-                    backgroundColor: 'rgba(96, 255, 0, 0.7)', 
-                    hoverBackgroundColor: 'rgba(96, 255, 0, 1)',
+                    backgroundColor: 'rgba(16, 185, 129, 0.7)', 
+                    hoverBackgroundColor: 'rgba(16, 185, 129, 1)',
                     stack: 'Stack 0', order: 2, 
                 }
             ]
@@ -579,11 +593,7 @@
             labels: bebanLabels,
             datasets: [{
                 data: bebanData,
-                backgroundColor: [
-                    '#FF1053', '#00FFFF', '#D400FF', '#60FF00', '#FFC700', '#00FF8C', 
-                    '#FF7E00', '#7D00FF', '#FF00A6', '#00E6FF', '#CCFF00', '#FF005E',
-                    '#5e5eff', '#00ff7e', '#ffaa00', '#00ccff', '#e000ff' 
-                ], 
+                backgroundColor: ['#f43f5e', '#06b6d4', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#6366f1', '#a855f7', '#3b82f6', '#14b8a6', '#f97316', '#eab308', '#84cc16', '#22c55e'], 
                 borderWidth: 0,
                 hoverOffset: 10
             }]
@@ -628,10 +638,10 @@
     let listRincianHTML = '';
 
     if (rincianOpsLainV.length === 0) {
-        // Fallback jika tidak ada data V
+        // Fallback jika rincian V kosong
         bebanLainBody.innerHTML = `<tr><td colspan="2" class="px-3 py-2 text-center text-gray-500">Belum ada rincian beban operasional lain-lain (V)</td></tr>`;
     } else {
-        // 1. Render Rincian
+        // 1. Render Rincian dari array V
         rincianOpsLainV.forEach(item => {
             totalOpsLainDihitung += item.jumlah; 
             listRincianHTML += `
