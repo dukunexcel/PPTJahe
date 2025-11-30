@@ -5,12 +5,12 @@
     /* Styling Dasar dan Font Inter */
     body { font-family: 'Inter', sans-serif; }
     
-    /* 1. BACKGROUND UTAMA: GRADASI MEMUKAU (Forest Green -> Black -> Neon Green) */
+    /* 1. BACKGROUND UTAMA: GRADASI MEMUKAU (Deep Emerald -> Black -> Lime Neon) */
     #app { 
         min-height: 100vh;
         background-color: #000000;
-        /* Linear Gradient Diagonal (135deg): Forest Green (kiri atas) -> Hitam (tengah) -> Neon Green (kanan bawah) */
-        background-image: linear-gradient(135deg, #114e2c 0%, #022c22 30%, #000000 60%, #9bca1a 100%);
+        /* Linear Gradient Diagonal (135deg): Deep Emerald -> Hitam -> Lime Neon */
+        background-image: linear-gradient(135deg, #031e13 0%, #022c22 30%, #000000 60%, #60FF00 100%);
         background-attachment: fixed;
         color: #e2e8f0;
     }
@@ -24,7 +24,7 @@
         transform: translate(-50%, -50%);
         width: 100%;
         height: 100%;
-        background: radial-gradient(circle at center, rgba(17, 78, 44, 0.15) 0%, transparent 60%);
+        background: radial-gradient(circle at center, rgba(3, 30, 19, 0.15) 0%, transparent 60%);
         pointer-events: none;
         z-index: 0;
     }
@@ -42,51 +42,52 @@
         z-index: 1;
     }
 
-    /* 3. VARIASI WARNA KARTU */
-    /* Variasi A: CYAN (Pemasukan) */
-    .card-cyan { border-top: 4px solid #06b6d4; }
+    /* 3. VARIASI WARNA KARTU (Menggunakan Palet Neon Baru) */
+    
+    /* Variasi A: ELECTRIC AQUA (Pemasukan) */
+    .card-cyan { border-top: 4px solid #00FFFF; }
     .card-cyan:hover {
-        box-shadow: 0 0 30px rgba(6, 182, 212, 0.15);
-        border-color: rgba(6, 182, 212, 0.4);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.15);
+        border-color: rgba(0, 255, 255, 0.4);
         transform: translateY(-5px);
     }
-    .text-cyan-neon { color: #22d3ee; text-shadow: 0 0 15px rgba(34, 211, 238, 0.4); }
+    .text-cyan-neon { color: #00FFFF; text-shadow: 0 0 15px rgba(0, 255, 255, 0.4); }
 
-    /* Variasi B: RED/CRIMSON (Pengeluaran) */
-    .card-red { border-top: 4px solid #f43f5e; }
+    /* Variasi B: NEON CRIMSON (Pengeluaran) */
+    .card-red { border-top: 4px solid #FF1053; }
     .card-red:hover {
-        box-shadow: 0 0 30px rgba(244, 63, 94, 0.15);
-        border-color: rgba(244, 63, 94, 0.4);
+        box-shadow: 0 0 30px rgba(255, 16, 83, 0.15);
+        border-color: rgba(255, 16, 83, 0.4);
         transform: translateY(-5px);
     }
-    .text-red-neon { color: #fb7185; text-shadow: 0 0 15px rgba(251, 113, 133, 0.4); }
+    .text-red-neon { color: #FF1053; text-shadow: 0 0 15px rgba(255, 16, 83, 0.4); }
 
-    /* Variasi C: PURPLE (Arus Kas) */
-    .card-purple { border-top: 4px solid #8b5cf6; }
+    /* Variasi C: ELECTRIC VIOLET (Arus Kas) */
+    .card-purple { border-top: 4px solid #D400FF; }
     .card-purple:hover {
-        box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
-        border-color: rgba(139, 92, 246, 0.4);
+        box-shadow: 0 0 30px rgba(212, 0, 255, 0.15);
+        border-color: rgba(212, 0, 255, 0.4);
         transform: translateY(-5px);
     }
-    .text-purple-neon { color: #a78bfa; text-shadow: 0 0 15px rgba(167, 139, 250, 0.4); }
+    .text-purple-neon { color: #D400FF; text-shadow: 0 0 15px rgba(212, 0, 255, 0.4); }
 
-    /* Variasi D: GREEN (Laba) */
-    .card-green { border-top: 4px solid #10b981; }
+    /* Variasi D: LAWN GREEN (Laba) */
+    .card-green { border-top: 4px solid #60FF00; }
     .card-green:hover {
-        box-shadow: 0 0 30px rgba(16, 185, 129, 0.15);
-        border-color: rgba(16, 185, 129, 0.4);
+        box-shadow: 0 0 30px rgba(96, 255, 0, 0.15);
+        border-color: rgba(96, 255, 0, 0.4);
         transform: translateY(-5px);
     }
-    .text-green-neon { color: #34d399; text-shadow: 0 0 15px rgba(52, 211, 153, 0.4); }
+    .text-green-neon { color: #60FF00; text-shadow: 0 0 15px rgba(96, 255, 0, 0.4); }
 
-    /* Variasi E: YELLOW/AMBER (Hutang/Piutang) */
-    .card-yellow { border-top: 4px solid #f59e0b; }
+    /* Variasi E: PURE AMBER (Hutang/Piutang) */
+    .card-yellow { border-top: 4px solid #FFC700; }
     .card-yellow:hover {
-        box-shadow: 0 0 30px rgba(245, 158, 11, 0.15);
-        border-color: rgba(245, 158, 11, 0.4);
+        box-shadow: 0 0 30px rgba(255, 199, 0, 0.15);
+        border-color: rgba(255, 199, 0, 0.4);
         transform: translateY(-5px);
     }
-    .text-yellow-neon { color: #fbbf24; text-shadow: 0 0 15px rgba(251, 191, 36, 0.4); }
+    .text-yellow-neon { color: #FFC700; text-shadow: 0 0 15px rgba(255, 199, 0, 0.4); }
 
 
     /* Typography & Utilities */
@@ -111,7 +112,7 @@
 <div id="app" class="flex flex-col items-center p-4 sm:p-8">
     
     <header class="w-full max-w-6xl mb-12 z-10 relative">
-        <div class="rounded-3xl relative p-8 md:p-12 text-center border border-[#9bca1a]/30 bg-gradient-to-br from-[#114e2c] to-[#9bca1a] shadow-[0_20px_50px_rgba(17,78,44,0.5)]">
+        <div class="rounded-3xl relative p-8 md:p-12 text-center border border-[#60FF00]/30 bg-gradient-to-br from-[#031e13] to-[#60FF00] shadow-[0_20px_50px_rgba(3,30,19,0.5)]">
             <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full mix-blend-overlay filter blur-3xl translate-x-1/3 -translate-y-1/3"></div>
             <div class="absolute bottom-0 left-0 w-64 h-64 bg-black opacity-20 rounded-full mix-blend-multiply filter blur-3xl -translate-x-1/3 translate-y-1/3"></div>
 
@@ -347,19 +348,20 @@
         labaKotor: getNumericValue('laba_kotor'), 
         
         labaBersih: getNumericValue('laba_bersih'),
-        opsNonPrive: getNumericValue('ops_non_prive'),
+        // NILAI OPERASIONAL YANG BENAR DARI URL
+        opsNonPrive: getNumericValue('ops_non_prive'), 
         totalPengeluaran: getNumericValue('total_pengeluaran'),
         arusKasBersih: getNumericValue('arus_kas_bersih'),
         totalPiutang: getNumericValue('total_piutang'),
         totalHutang: getNumericValue('total_hutang'),
         
-        // --- DATA RINCIAN CHART (Kunci Baru sesuai Formula AppSheet) ---
+        // --- DATA RINCIAN CHART ---
         // BPOM
         hppBpom: getNumericValue('hpp_bpom'), 
         labaBpom: getNumericValue('laba_bpom'),
         omsetBpom: getNumericValue('omset_bpom'),
         
-        // NON-BPOM (Menggunakan kunci dengan underscores)
+        // NON-BPOM
         hppNonBpom: getNumericValue('hpp_non_bpom'), 
         labaNonBpom: getNumericValue('laba_non_bpom'),
         omsetNonBpom: getNumericValue('omset_non_bpom'),
@@ -367,13 +369,11 @@
         // OFFLINE
         hppOffline: getNumericValue('hpp_offline'), 
         labaOffline: getNumericValue('laba_offline'),
-        // Omset Offline (derived jika tidak ada parameter langsung)
         omsetOffline: getNumericValue('hpp_offline') + getNumericValue('laba_offline'),
         
         // ONLINE
         hppOnline: getNumericValue('hpp_online'), 
         labaOnline: getNumericValue('laba_online'),
-        // Omset Online (derived)
         omsetOnline: getNumericValue('hpp_online') + getNumericValue('laba_online'),
         
         bebanRincian: getBebanRincian(),
@@ -391,22 +391,16 @@
         let formatted = 'Rp ' + formatRupiah(Math.abs(num));
         
         if (num < 0) {
-            // Ini menghasilkan tag <span> yang menyebabkan masalah di label chart
             return `<span class="text-red-400 font-medium">(${formatted})</span>`;
         }
         return `<span>${formatted}</span>`;
     }
 
-    /**
-     * @description Fungsi baru untuk formatting Rupiah KHUSUS untuk label chart (teks biasa tanpa HTML).
-     */
     function formatRupiahText(angka) {
         let num = Number(angka);
-        // Tampilkan sebagai nilai absolut
         let formatted = 'Rp ' + formatRupiah(Math.abs(num));
         
         if (num < 0) {
-            // Tampilkan negatif dalam kurung (teks biasa)
             return `(${formatted})`;
         }
         return formatted;
@@ -453,8 +447,7 @@
     // KPI 2 (Pengeluaran)
     const opsLainItem = Array.isArray(DATA.bebanRincian) ? DATA.bebanRincian.find(item => item.uraian && (item.uraian.toLowerCase().includes("lain"))) : null;
     const opsLainValue = opsLainItem ? opsLainItem.jumlah : 0;
-    // opsPokokValue dihitung dari total opsNonPrive dikurangi Ops Lain-lain
-    const opsPokokValue = DATA.opsNonPrive - opsLainValue;
+    const opsPokokValue = DATA.opsNonPrive - opsLainValue; // Ops Pokok = Total Ops - Ops Lain-lain
 
     document.getElementById('belanjaBarang').innerHTML = formatAndColor(DATA.hppTotal, true);
     document.getElementById('opsPokok').innerHTML = formatAndColor(opsPokokValue, true);
@@ -473,6 +466,7 @@
 
     document.getElementById('labaKotorNominal').innerText = formatRupiah(labaKotor);
     document.getElementById('labaKotorProsentase').innerText = marginProsentase.toFixed(2) + '%';
+    // Menggunakan DATA.opsNonPrive (Total Beban Operasional)
     document.getElementById('operasionalKpi4').innerHTML = formatAndColor(DATA.opsNonPrive, true); 
     document.getElementById('labaBersihNominal').innerText = formatRupiah(labaBersih);
     
@@ -485,12 +479,9 @@
     
     // 1. STACKED BAR CHART (OMSET vs HPP)
     const barLabels = ['BPOM', 'NON-BPOM', 'OFFLINE', 'ONLINE'];
-    // Data HPP
     const hppData = [DATA.hppBpom, DATA.hppNonBpom, DATA.hppOffline, DATA.hppOnline];
-    // Data Laba
     const labaData = [DATA.labaBpom, DATA.labaNonBpom, DATA.labaOffline, DATA.labaOnline];
     
-    // Hitung max value untuk skala grafik
     const maxVal = Math.max(
         (DATA.hppBpom + DATA.labaBpom), 
         (DATA.hppNonBpom + DATA.labaNonBpom),
@@ -506,15 +497,15 @@
                 {
                     label: 'HPP',
                     data: hppData,
-                    backgroundColor: 'rgba(244, 63, 94, 0.7)', // Rose for HPP
-                    hoverBackgroundColor: 'rgba(244, 63, 94, 1)',
+                    backgroundColor: 'rgba(255, 16, 83, 0.7)', // Neon Crimson
+                    hoverBackgroundColor: 'rgba(255, 16, 83, 1)',
                     stack: 'Stack 0', order: 1, 
                 },
                 {
                     label: 'Laba Kotor',
                     data: labaData,
-                    backgroundColor: 'rgba(16, 185, 129, 0.7)', // Emerald for Profit
-                    hoverBackgroundColor: 'rgba(16, 185, 129, 1)',
+                    backgroundColor: 'rgba(96, 255, 0, 0.7)', // Lawn Green
+                    hoverBackgroundColor: 'rgba(96, 255, 0, 1)',
                     stack: 'Stack 0', order: 2, 
                 }
             ]
@@ -541,7 +532,6 @@
                             let totalOmsetKategori = hppData[index] + labaData[index];
                             let nilai = context.parsed.x; 
                             
-                            // [FIX] Gunakan formatRupiah (Teks Biasa) agar tidak muncul kode HTML <span>
                             let result = label + ': Rp ' + formatRupiah(nilai);
                             
                             if (label === 'Laba Kotor') {
@@ -550,7 +540,6 @@
                                 result += ` (${totalOmsetKategori !== 0 ? (hppData[index] / totalOmsetKategori * 100).toFixed(2) : 0}% HPP)`;
                             }
                             
-                            // [FIX] Gunakan formatRupiah (Teks Biasa)
                             result += ' | Total Omset: Rp ' + formatRupiah(totalOmsetKategori);
                             return result;
                         }
@@ -562,7 +551,6 @@
 
     // 2. DOUGHNUT CHART (BEBAN)
     const bebanRincianFinal = Array.isArray(DATA.bebanRincian) ? DATA.bebanRincian : [];
-    // PERBAIKAN: Menggunakan formatRupiahText() yang baru agar label chart tidak menampilkan tag <span>
     const bebanLabels = bebanRincianFinal.map(b => b.uraian + ' (' + formatRupiahText(b.jumlah) + ')');
     const bebanData = bebanRincianFinal.map(b => b.jumlah);
 
@@ -573,7 +561,20 @@
             labels: bebanLabels,
             datasets: [{
                 data: bebanData,
-                backgroundColor: ['#f43f5e', '#06b6d4', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#6366f1', '#a855f7', '#3b82f6', '#14b8a6', '#f97316', '#eab308', '#84cc16', '#22c55e'], // Updated colors for more items
+                backgroundColor: [
+                    '#FF1053', // Neon Crimson
+                    '#00FFFF', // Electric Aqua
+                    '#D400FF', // Electric Violet
+                    '#60FF00', // Lawn Green
+                    '#FFC700', // Pure Amber
+                    '#00FF8C', // Spring Green
+                    '#FF7E00', // Orange Pop
+                    '#7D00FF', // Royal Purple
+                    '#FF00A6', // Bright Pink
+                    '#00E6FF', // Sky Blue
+                    '#CCFF00', // Chartreuse
+                    '#FF005E'  // Deep Rose
+                ], 
                 borderWidth: 0,
                 hoverOffset: 10
             }]
@@ -588,14 +589,14 @@
 
     // --- RENDER TABEL BEBAN ---
     const bebanBody = document.getElementById('bebanRincianBody');
-    let totalBebanPokok = 0;
+    // Hapus perhitungan let totalBebanPokok = 0;
     
     if (bebanRincianFinal.length === 0) {
         bebanBody.innerHTML = `<tr><td colspan="2" class="px-3 py-2 text-center text-gray-500">Belum ada data rincian beban</td></tr>`;
     } else {
         bebanBody.innerHTML = ''; 
         bebanRincianFinal.forEach(item => {
-            totalBebanPokok += item.jumlah;
+            // Hapus akumulasi totalBebanPokok
             bebanBody.innerHTML += `
                 <tr class="hover:bg-white/5 transition-colors">
                     <td class="px-3 py-2 text-gray-300">${item.uraian}</td>
@@ -603,10 +604,14 @@
                 </tr>
             `;
         });
+        
+        // PERBAIKAN UTAMA: Menggunakan DATA.opsNonPrive untuk Total Beban Pokok
+        const totalBebanFinal = DATA.opsNonPrive;
+        
         bebanBody.innerHTML += `
             <tr class="bg-white/5 font-bold border-t border-white/10">
                 <td class="px-3 py-2 text-gray-200">TOTAL BEBAN POKOK</td>
-                <td class="px-3 py-2 text-right text-gray-200">${formatAndColor(totalBebanPokok, true)}</td>
+                <td class="px-3 py-2 text-right text-gray-200">${formatAndColor(totalBebanFinal, true)}</td>
             </tr>
         `;
     }
@@ -616,23 +621,23 @@
     labaBody.innerHTML = `
         <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
             <td class="px-3 py-2 text-gray-300">Total Pemasukan Bersih</td>
-            <td class="px-3 py-2 text-right text-cyan-400">${formatAndColor(DATA.totalPemasukan)}</td>
+            <td class="px-3 py-2 text-right text-cyan-neon">${formatAndColor(DATA.totalPemasukan)}</td>
         </tr>
         <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
             <td class="px-3 py-2 text-gray-300">Total HPP</td>
-            <td class="px-3 py-2 text-right text-red-400">${formatAndColor(DATA.hppTotal, true)}</td>
+            <td class="px-3 py-2 text-right text-red-neon">${formatAndColor(DATA.hppTotal, true)}</td>
         </tr>
         <tr class="bg-white/5 font-bold border-b border-white/5">
-            <td class="px-3 py-2 text-emerald-400">LABA KOTOR</td>
-            <td class="px-3 py-2 text-right text-emerald-400">${formatAndColor(DATA.labaKotor)}</td>
+            <td class="px-3 py-2 text-green-neon">LABA KOTOR</td>
+            <td class="px-3 py-2 text-right text-green-neon">${formatAndColor(DATA.labaKotor)}</td>
         </tr>
         <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
             <td class="px-3 py-2 text-gray-300">Total Beban Operasional</td>
-            <td class="px-3 py-2 text-right text-red-400">${formatAndColor(DATA.opsNonPrive, true)}</td>
+            <td class="px-3 py-2 text-right text-red-neon">${formatAndColor(DATA.opsNonPrive, true)}</td>
         </tr>
         <tr class="bg-gradient-to-r from-emerald-900/20 to-transparent font-bold border-t border-emerald-500/30">
-            <td class="px-3 py-2 text-emerald-300">LABA BERSIH</td>
-            <td class="px-3 py-2 text-right text-emerald-300">${formatAndColor(DATA.labaBersih)}</td>
+            <td class="px-3 py-2 text-green-neon">LABA BERSIH</td>
+            <td class="px-3 py-2 text-right text-green-neon">${formatAndColor(DATA.labaBersih)}</td>
         </tr>
     `;
 
