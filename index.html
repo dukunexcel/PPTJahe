@@ -120,7 +120,7 @@
                 <div class="flex items-center justify-center space-x-4 mb-3">
                     <div class="h-px w-12 bg-white/40"></div>
                     <h2 class="text-xs font-bold tracking-[0.3em] uppercase text-green-100 drop-shadow-sm">
-                        LAPORAN PEMASUKAN DAN PENGELUARAN
+                        Financial Dashboard
                     </h2>
                     <div class="h-px w-12 bg-white/40"></div>
                 </div>
@@ -226,7 +226,7 @@
                 <p class="kpi-label text-amber-200">5. POSISI NETTO HUTANG/PIUTANG</p>
                 <span class="kpi-value text-yellow-neon" id="posisiNetto">Rp 0</span>
                 <div class="mt-4 p-3 rounded-lg bg-amber-900/10 border border-amber-500/20 text-sm">
-                     <p class="text-amber-100 font-medium tracking-wide" id="hutangPiutangAnalisis">Piutang: Rp 0 | Hutang: Rp 0</p>
+                     <p id="hutangPiutangAnalisis">Piutang: Rp 0 | Hutang: Rp 0</p>
                 </div>
             </div>
         </div>
@@ -313,46 +313,6 @@
     Chart.defaults.color = '#94a3b8'; 
     Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.05)'; 
     
-// --- SCRIPT LOGIKA TANGGAL (DIPERBARUI DARI KOLOM APPSHEET) ---
-    const paramBulan = params.get('bulan_nama');
-    const paramTahun = params.get('tahun_angka');
-    
-    // Parameter Baru dari Kolom DateTime AppSheet
-    // Menggunakan 'decodeURIComponent' untuk memastikan spasi terbaca (misal: "1 November 2025")
-    const paramStartText = params.get('start_date_text') ? decodeURIComponent(params.get('start_date_text')) : null;
-    const paramEndText   = params.get('end_date_text') ? decodeURIComponent(params.get('end_date_text')) : null;
-    const paramDurasi    = getNumericValue('durasi_hari');
-
-    // Variabel Tampilan
-    let displayBulan, displayTahun, displayRange;
-
-    if (paramBulan && paramTahun && paramStartText && paramEndText) {
-        // SKENARIO UTAMA: Data lengkap dari AppSheet
-        displayBulan = paramBulan;
-        displayTahun = paramTahun;
-        
-        // Format: "Mulai Tanggal 1 November 2025 s.d. 30 November 2025 Selama 30 hari"
-        displayRange = `Mulai Tanggal ${paramStartText} s.d. ${paramEndText} Selama ${paramDurasi} hari`;
-        
-    } else {
-        // SKENARIO FALLBACK (Jika dibuka tanpa parameter URL)
-        // Default: Mundur 1 bulan dari hari ini
-        const today = new Date();
-        today.setMonth(today.getMonth() - 1); 
-        
-        const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-        displayBulan = months[today.getMonth()];
-        displayTahun = today.getFullYear();
-        
-        const lastDay = new Date(displayTahun, today.getMonth() + 1, 0).getDate();
-        displayRange = `Mulai Tanggal 1 ${displayBulan} ${displayTahun} s.d. ${lastDay} ${displayBulan} ${displayTahun} Selama ${lastDay} hari`;
-    }
-
-    // Render ke Elemen HTML
-    document.getElementById('headerMonthYear').innerText = `Bulan ${displayBulan} Tahun ${displayTahun}`;
-    document.getElementById('headerDateRange').innerText = displayRange;
-
-    
     // --- FUNGSI PENGOLAHAN DATA ---
     const params = new URLSearchParams(window.location.search);
 
@@ -363,6 +323,8 @@
         }
 
         if (urlValue) {
+            // Hapus karakter non-digit selain titik dan minus. Ini akan membersihkan string
+            // seperti '26penjualan_kotor=243639916' menjadi '26' jika dibaca untuk 'durasi_hari'.
             let cleaned = String(urlValue).replace(/[^0-9.-]/g, '');
             let parsed = Number(cleaned);
             return isNaN(parsed) ? fallbackValue : parsed;
@@ -371,7 +333,6 @@
     }
     
     function getBebanRincian() {
-        // Mengambil rincian Beban Pokok (G-T)
         const jsonString = params.get('beban_rincian');
         if (jsonString) {
             try { return JSON.parse(decodeURIComponent(jsonString)); } 
@@ -380,7 +341,6 @@
         return []; 
     }
 
-    // FUNGSI BARU DENGAN PERBAIKAN TRAILING COMMA
     function getRincianOpsLainV() {
         const jsonString = params.get('rincian_ops_lain_v');
         if (jsonString) {
@@ -404,7 +364,6 @@
         return []; 
     }
 
-
     const DATA = {
         // --- KPI UTAMA ---
         totalPenjualanKotor: getNumericValue('penjualan_kotor'),
@@ -423,7 +382,7 @@
         totalPiutang: getNumericValue('total_piutang'),
         totalHutang: getNumericValue('total_hutang'),
         
-        // --- DATA RINCIAN ---
+        // --- DATA RINCIAN CHART ---
         hppBpom: getNumericValue('hpp_bpom'), 
         labaBpom: getNumericValue('laba_bpom'),
         omsetBpom: getNumericValue('omset_bpom'),
@@ -437,9 +396,43 @@
         labaOnline: getNumericValue('laba_online'),
         omsetOnline: getNumericValue('hpp_online') + getNumericValue('laba_online'),
         
-        bebanRincian: getBebanRincian(), // Rincian G-T
-        rincianOpsLainV: getRincianOpsLainV(), // Rincian V (BARU)
+        bebanRincian: getBebanRincian(), 
+        rincianOpsLainV: getRincianOpsLainV(), 
     };
+    
+    // --- SCRIPT LOGIKA TANGGAL (UPDATE DARI KOLOM APPSHEET) ---
+    const paramBulan = params.get('bulan_nama');
+    const paramTahun = params.get('tahun_angka');
+    
+    // Menggunakan 'decodeURIComponent' untuk memastikan spasi terbaca (misal: "1 November 2025")
+    const paramStartText = params.get('start_date_text') ? decodeURIComponent(params.get('start_date_text')) : null;
+    const paramEndText   = params.get('end_date_text') ? decodeURIComponent(params.get('end_date_text')) : null;
+    const paramDurasi    = getNumericValue('durasi_hari');
+
+    let displayBulan, displayTahun, displayRange;
+
+    if (paramBulan && paramTahun && paramStartText && paramEndText) {
+        // SKENARIO UTAMA: Data lengkap dari AppSheet
+        displayBulan = paramBulan;
+        displayTahun = paramTahun;
+        displayRange = `Mulai Tanggal ${paramStartText} s.d. ${paramEndText} Selama ${paramDurasi} hari`;
+        
+    } else {
+        // SKENARIO FALLBACK (Jika dibuka tanpa parameter URL)
+        const today = new Date();
+        today.setMonth(today.getMonth() - 1); 
+        
+        const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        displayBulan = months[today.getMonth()] || "Bulan Tidak Dikenal";
+        displayTahun = today.getFullYear();
+        
+        const lastDay = new Date(displayTahun, today.getMonth() + 1, 0).getDate();
+        displayRange = `Mulai Tanggal 1 ${displayBulan} ${displayTahun} s.d. ${lastDay} ${displayBulan} ${displayTahun} Selama ${lastDay} hari`;
+    }
+
+    // Render ke Elemen HTML
+    document.getElementById('headerMonthYear').innerText = `Bulan ${displayBulan} Tahun ${displayTahun}`;
+    document.getElementById('headerDateRange').innerText = displayRange;
 
     // --- HELPER FORMATTING ---
     function formatRupiah(angka) {
@@ -452,7 +445,6 @@
         if (isCost && num > 0) num = -num; 
         let formatted = 'Rp ' + formatRupiah(Math.abs(num));
         
-        // Menggunakan kelas neon yang sesuai dengan palet baru
         const colorClass = num < 0 ? "text-red-neon font-medium" : "text-gray-200";
         const sign = num < 0 ? `(${formatted})` : formatted;
 
@@ -663,7 +655,7 @@
 
     // --- RENDER TABEL RINCIAN BEBAN LAIN-LAIN (SISI KANAN V) ---
     const bebanLainBody = document.getElementById('bebanRincianLainBody');
-    const rincianOpsLainV = DATA.rincianOpsLainV; // Ambil data rincian V yang baru
+    const rincianOpsLainV = DATA.rincianOpsLainV; 
 
     let totalOpsLainDihitung = 0; 
     let listRincianHTML = '';
@@ -671,7 +663,6 @@
     if (rincianOpsLainV.length === 0) {
         bebanLainBody.innerHTML = `<tr><td colspan="2" class="px-3 py-2 text-center text-gray-500">Belum ada rincian beban operasional lain-lain (V)</td></tr>`;
     } else {
-        // 1. Render Rincian dari array V
         rincianOpsLainV.forEach(item => {
             totalOpsLainDihitung += item.jumlah; 
             listRincianHTML += `
@@ -682,7 +673,6 @@
             `;
         });
         
-        // 2. Gabungkan Rincian dan Total
         bebanLainBody.innerHTML = listRincianHTML;
         bebanLainBody.innerHTML += `
             <tr class="bg-white/5 font-bold border-t border-white/10">
@@ -756,5 +746,3 @@
     `;
 
 </script>
-
-
