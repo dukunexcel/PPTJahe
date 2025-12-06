@@ -313,16 +313,46 @@
     Chart.defaults.color = '#94a3b8'; 
     Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.05)'; 
     
-    // --- SCRIPT LOGIKA TANGGAL ---
-    const today = new Date();
-    const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-    const currentMonthName = months[today.getMonth()];
-    const currentYear = today.getFullYear();
-    const lastDayOfMonth = new Date(currentYear, today.getMonth() + 1, 0).getDate();
+// --- SCRIPT LOGIKA TANGGAL (DIPERBARUI DARI KOLOM APPSHEET) ---
+    const paramBulan = params.get('bulan_nama');
+    const paramTahun = params.get('tahun_angka');
+    
+    // Parameter Baru dari Kolom DateTime AppSheet
+    // Menggunakan 'decodeURIComponent' untuk memastikan spasi terbaca (misal: "1 November 2025")
+    const paramStartText = params.get('start_date_text') ? decodeURIComponent(params.get('start_date_text')) : null;
+    const paramEndText   = params.get('end_date_text') ? decodeURIComponent(params.get('end_date_text')) : null;
+    const paramDurasi    = getNumericValue('durasi_hari');
 
-    document.getElementById('headerMonthYear').innerText = `Bulan ${currentMonthName} Tahun ${currentYear}`;
-    document.getElementById('headerDateRange').innerText = `Mulai Tanggal 1 ${currentMonthName} ${currentYear} s.d. ${lastDayOfMonth} ${currentMonthName} ${currentYear} Selama ${lastDayOfMonth} hari`;
+    // Variabel Tampilan
+    let displayBulan, displayTahun, displayRange;
 
+    if (paramBulan && paramTahun && paramStartText && paramEndText) {
+        // SKENARIO UTAMA: Data lengkap dari AppSheet
+        displayBulan = paramBulan;
+        displayTahun = paramTahun;
+        
+        // Format: "Mulai Tanggal 1 November 2025 s.d. 30 November 2025 Selama 30 hari"
+        displayRange = `Mulai Tanggal ${paramStartText} s.d. ${paramEndText} Selama ${paramDurasi} hari`;
+        
+    } else {
+        // SKENARIO FALLBACK (Jika dibuka tanpa parameter URL)
+        // Default: Mundur 1 bulan dari hari ini
+        const today = new Date();
+        today.setMonth(today.getMonth() - 1); 
+        
+        const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        displayBulan = months[today.getMonth()];
+        displayTahun = today.getFullYear();
+        
+        const lastDay = new Date(displayTahun, today.getMonth() + 1, 0).getDate();
+        displayRange = `Mulai Tanggal 1 ${displayBulan} ${displayTahun} s.d. ${lastDay} ${displayBulan} ${displayTahun} Selama ${lastDay} hari`;
+    }
+
+    // Render ke Elemen HTML
+    document.getElementById('headerMonthYear').innerText = `Bulan ${displayBulan} Tahun ${displayTahun}`;
+    document.getElementById('headerDateRange').innerText = displayRange;
+
+    
     // --- FUNGSI PENGOLAHAN DATA ---
     const params = new URLSearchParams(window.location.search);
 
@@ -726,4 +756,5 @@
     `;
 
 </script>
+
 
