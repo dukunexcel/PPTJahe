@@ -369,6 +369,7 @@
         totalPenjualanKotor: getNumericValue('penjualan_kotor'),
         totalRetur: getNumericValue('total_retur'),
         totalPemasukan: getNumericValue('total_pemasukan'),
+        totalBelanja: getNumericValue('total_belanja'),
         
         hppTotal: getNumericValue('hpp_total'), 
         labaKotor: getNumericValue('laba_kotor'), 
@@ -503,7 +504,7 @@
     document.getElementById('totalRetur').innerHTML = formatAndColor(DATA.totalRetur); 
     document.getElementById('totalPemasukan').innerText = formatRupiah(DATA.totalPemasukan);
 
-    document.getElementById('belanjaBarang').innerHTML = formatAndColor(DATA.hppTotal, true);
+    document.getElementById('belanjaBarang').innerHTML = formatAndColor(DATA.totalBelanja, true);
     document.getElementById('opsPokok').innerHTML = formatAndColor(opsPokokValue, true); 
     document.getElementById('opsLain').innerHTML = formatAndColor(opsLainValue, true); 
     document.getElementById('totalPengeluaran').innerText = formatRupiah(DATA.totalPengeluaran);
@@ -746,3 +747,4 @@
     `;
 
 </script>
+
