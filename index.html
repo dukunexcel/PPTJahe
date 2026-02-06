@@ -145,6 +145,22 @@
         right: -25px;
         background: #ffffff;
     }
+    .collapsed {
+        max-height: 0 !important;
+        opacity: 0;
+        overflow: hidden;
+        margin-top: 0 !important;
+    }
+
+    .toggle-icon {
+        transition: transform 0.25s ease;
+    }
+
+    .collapsed + .toggle-icon,
+    .collapsed ~ .toggle-icon {
+        transform: rotate(-90deg);
+    }
+
 </style>
 
 <div id="app" class="flex flex-col items-center p-4 sm:p-8">
@@ -289,7 +305,14 @@
     </section>
     
     <section class="w-full max-w-6xl card p-6 mb-8 relative z-10">
-        <h2 class="text-lg font-bold text-[#052a3d] mb-3 border-b border-gray-800 pb-2">Rincian Beban Operasional</h2>
+        <div class="flex justify-between items-center cursor-pointer select-none py-1"
+         onclick="toggleSection('rincianBebanBody', this)">
+        <h2 class="text-lg font-bold text-[#052a3d]">
+            Rincian Beban Operasional
+        </h2>
+        <span class="toggle-icon text-[#052a3d] text-xl">▼</span>
+        </div>
+        <div id="rincianBebanBody" class="mt-4 transition-all duration-300 overflow-hidden">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
                 <h3 class="font-bold text-md mb-3 text-red-neon uppercase tracking-widest text-xs">A. Beban Operasional Pokok (G s.d. T)</h3>
@@ -318,6 +341,7 @@
                 </table>
             </div>
         </div>
+        </div>
     </section>
 
     <section class="w-full max-w-6xl card card-green p-6 mb-8 relative z-10">
@@ -331,19 +355,36 @@
     <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full max-w-6xl mb-8 relative z-10">
         
         <div class="card p-6">
-            <h2 class="text-lg font-bold text-[#052a3d] mb-4">Analisis Margin BPOM vs NON-BPOM</h2>
-            <table class="w-full text-sm text-left border-collapse">
-                <tbody id="marginAnalysisBodyBpNom"></tbody>
-            </table>
+            <div class="flex justify-between items-center cursor-pointer select-none"
+                 onclick="toggleSection('marginBpNomBody', this)">
+                <h2 class="text-lg font-bold text-[#052a3d]">
+                    Analisis Margin BPOM vs NON-BPOM
+                </h2>
+                <span class="toggle-icon text-[#052a3d] text-xl">▼</span>
+            </div>
+            <div id="marginBpNomBody" class="mt-4 transition-all duration-300">
+                <table class="w-full text-sm text-left border-collapse">
+                    <tbody id="marginAnalysisBodyBpNom"></tbody>
+                </table>
+            </div>
         </div>
         
         <div class="card p-6">
-            <h2 class="text-lg font-bold text-[#052a3d] mb-4">Analisis Margin ONLINE vs OFFLINE</h2>
-            <table class="w-full text-sm text-left border-collapse">
-                <tbody id="marginAnalysisBodyOL"></tboady>
-            </table>
+            <div class="flex justify-between items-center cursor-pointer select-none"
+                 onclick="toggleSection('marginBodyOL', this)">
+                <h2 class="text-lg font-bold text-[#052a3d]">
+                    Analisis Margin ONLINE vs OFFLINE
+                </h2>
+                <span class="toggle-icon text-[#052a3d] text-xl">▼</span>
+            </div>
+            <div id="marginBodyOL" class="mt-4 transition-all duration-300">
+                <table class="w-full text-sm text-left border-collapse">
+                    <tbody id="marginAnalysisBodyOL"></tbody>
+                </table>
+            </div>
         </div>
     </section>
+    
 </div>
 
 <script>
@@ -524,12 +565,26 @@
                 <td class="px-3 py-1 text-[rgba(5,42,61,0.5)]">HPP:</td>
                 <td class="px-3 py-1 text-right text-[rgba(5,42,61,0.7)]" colspan="3">${formatAndColor(hpp, true)}</td>
             </tr>
-            <tr class="border-b border-gray-800">
+            <tr class="border-b border-white/10 font-semibold">
                 <td class="px-3 py-1 text-[#052a3d] font-semibold" colspan="2">Margin Kotor:</td>
-                <td class="px-3 py-1 text-[#052a3d] font-semibold" colspan="2">${formatAndColor(margin)}</td>
+                <td class="px-3 py-1 text-right text-[#052a3d] font-semibold" colspan="2">${formatAndColor(margin)}</td>
             </tr>
         `;
     }
+
+    function toggleSection(id, headerEl) {
+        const body = document.getElementById(id);
+        const icon = headerEl.querySelector('.toggle-icon');
+
+        body.classList.toggle('collapsed');
+
+        if (body.classList.contains('collapsed')) {
+            icon.textContent = '▶';
+        } else {
+            icon.textContent = '▼';
+        }
+    }
+
 
     // --- POPULATE DATA KE DOM ---
 
@@ -794,6 +849,7 @@
     `;
 
 </script>
+
 
 
 
