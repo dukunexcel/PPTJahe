@@ -4,101 +4,115 @@
 <style>
     body {
         font-family: 'Inter', sans-serif;
-        background: #F5F3EF;
-        color: #2E2E2E;
+        background: #052a3d;
+        color: #e6f2f6;
     }
 
-    /* BACKGROUND */
+    /* BACKGROUND UTAMA */
     #app {
         min-height: 100vh;
-        background: linear-gradient(
-            180deg,
-            #F5F3EF 0%,
-            #EFECE6 100%
-        );
+        background:
+            linear-gradient(
+                180deg,
+                #052a3d 0%,
+                #0b3d56 40%,
+                #117192 75%,
+                #19d1e6 100%
+            );
+        background-attachment: fixed;
     }
 
-    /* CARD */
+    /* CARD (Glass Blue) */
     .card {
-        background: #FFFFFF;
-        border-radius: 18px;
-        border: 1px solid #E5E1D8;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-        transition: all 0.25s ease;
+        background: rgba(5, 42, 61, 0.78);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-radius: 20px;
+        border: 1px solid rgba(179, 205, 215, 0.25);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.35);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
     }
 
     .card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 18px 35px rgba(0,0,0,0.08);
+        transform: translateY(-6px);
+        box-shadow: 0 35px 70px rgba(0,0,0,0.45);
     }
 
     /* KPI */
     .kpi-label {
         font-size: 0.7rem;
-        letter-spacing: 0.12em;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: #7A7A7A;
+        color: #b3cdd7;
         font-weight: 600;
     }
 
     .kpi-value {
-        font-size: 2.4rem;
+        font-size: 2.6rem;
         font-weight: 800;
-        color: #2E2E2E;
+        color: #19d1e6;
+        text-shadow: 0 0 18px rgba(25, 209, 230, 0.45);
     }
 
-    /* VARIASI WARNA CARD */
-    .card-cyan   { border-top: 4px solid #7A8F7A; }
-    .card-red    { border-top: 4px solid #C96A6A; }
-    .card-purple { border-top: 4px solid #9A8C98; }
-    .card-green  { border-top: 4px solid #9AA17B; }
-    .card-yellow { border-top: 4px solid #B08968; }
+    /* VARIASI CARD */
+    .card-cyan   { border-top: 4px solid #19d1e6; }
+    .card-red    { border-top: 4px solid #e05a5a; }
+    .card-purple { border-top: 4px solid #7aa2c8; }
+    .card-green  { border-top: 4px solid #4fd1c5; }
+    .card-yellow { border-top: 4px solid #f6c177; }
 
-    /* TEXT COLOR */
-    .text-cyan-neon   { color: #7A8F7A; }
-    .text-red-neon    { color: #C96A6A; }
-    .text-purple-neon { color: #9A8C98; }
-    .text-green-neon  { color: #9AA17B; }
-    .text-yellow-neon { color: #B08968; }
+    /* TEXT WARNA */
+    .text-cyan-neon   { color: #19d1e6; }
+    .text-red-neon    { color: #e05a5a; }
+    .text-purple-neon { color: #7aa2c8; }
+    .text-green-neon  { color: #4fd1c5; }
+    .text-yellow-neon { color: #f6c177; }
 
     /* HEADER */
     header .rounded-3xl {
         background: linear-gradient(
             135deg,
-            #EAE6DC,
-            #F5F3EF
+            #052a3d,
+            #117192
         );
-        border: 1px solid #E5E1D8;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        border: 1px solid rgba(179,205,215,0.35);
+        box-shadow: 0 40px 80px rgba(0,0,0,0.5);
     }
 
     header h1 {
-        color: #2E2E2E;
+        color: #e6f9ff;
+        text-shadow: 0 6px 30px rgba(25,209,230,0.35);
     }
 
     header h2 {
-        color: #7A8F7A;
+        color: #b3cdd7;
     }
 
     /* TABLE */
-    table {
-        color: #444;
-    }
-
     thead {
-        background: #F1EFEA;
-        color: #666;
+        background: rgba(179,205,215,0.08);
+        color: #b3cdd7;
     }
 
     tbody tr:hover {
-        background: #F6F4EE;
+        background: rgba(179,205,215,0.06);
     }
 
-    /* CHART LEGEND */
-    .chartjs-render-monitor {
-        color: #555;
+    /* GLOW DECOR */
+    .glow-blob {
+        position: absolute;
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        filter: blur(55px);
+        opacity: 0.35;
+        top: -25px;
+        right: -25px;
     }
 </style>
+
 
 
 <div id="app" class="flex flex-col items-center p-4 sm:p-8">
@@ -302,8 +316,8 @@
 
 <script>
     // --- KONFIGURASI CHART.JS GLOBAL UNTUK TEMA GELAP ---
-    Chart.defaults.color = '#94a3b8'; 
-    Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.05)'; 
+    Chart.defaults.color = '#b3cdd7';
+    Chart.defaults.borderColor = 'rgba(179,205,215,0.15)';
     
     // --- FUNGSI PENGOLAHAN DATA ---
     const params = new URLSearchParams(window.location.search);
@@ -542,16 +556,18 @@
                 {
                     label: 'HPP',
                     data: hppData,
-                    backgroundColor: 'rgba(255, 16, 83, 0.7)', 
-                    hoverBackgroundColor: 'rgba(255, 16, 83, 1)',
-                    stack: 'Stack 0', order: 1, 
+                    backgroundColor: 'rgba(224, 90, 90, 0.75)',
+                    hoverBackgroundColor: 'rgba(224, 90, 90, 1)',
+                    stack: 'Stack 0',
+                    order: 1,
                 },
                 {
                     label: 'Laba Kotor',
                     data: labaData,
-                    backgroundColor: 'rgba(96, 255, 0, 0.7)', 
-                    hoverBackgroundColor: 'rgba(96, 255, 0, 1)',
-                    stack: 'Stack 0', order: 2, 
+                    backgroundColor: 'rgba(25, 209, 230, 0.75)',
+                    hoverBackgroundColor: 'rgba(25, 209, 230, 1)',
+                    stack: 'Stack 0',
+                    order: 2,
                 }
             ]
         },
@@ -606,9 +622,16 @@
             datasets: [{
                 data: bebanData,
                 backgroundColor: [
-                    '#FF1053', '#00FFFF', '#D400FF', '#60FF00', '#FFC700', '#00FF8C', 
-                    '#FF7E00', '#7D00FF', '#FF00A6', '#00E6FF', '#CCFF00', '#FF005E',
-                    '#5e5eff', '#00ff7e', '#ffaa00', '#00ccff', '#e000ff' 
+                    '#19d1e6',
+                    '#117192',
+                    '#4fd1c5',
+                    '#7aa2c8',
+                    '#f6c177',
+                    '#e05a5a',
+                    '#5fb3ce',
+                    '#88d4e3',
+                    '#0e7490',
+                    '#22d3ee'
                 ], 
                 borderWidth: 0,
                 hoverOffset: 10
@@ -739,6 +762,7 @@
     `;
 
 </script>
+
 
 
 
