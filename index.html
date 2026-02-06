@@ -4,40 +4,35 @@
 <style>
     body {
         font-family: 'Inter', sans-serif;
-        background: #052a3d;
-        color: #e6f2f6;
+        background: #b3cdd7;
+        color: #052a3d;
     }
 
     /* BACKGROUND UTAMA */
     #app {
         min-height: 100vh;
-        background:
-            linear-gradient(
-                180deg,
-                #052a3d 0%,
-                #0b3d56 40%,
-                #117192 75%,
-                #19d1e6 100%
-            );
-        background-attachment: fixed;
+        background: linear-gradient(
+            180deg,
+            #b3cdd7 0%,
+            #c6dde6 50%,
+            #d9eef5 100%
+        );
     }
 
-    /* CARD (Glass Blue) */
+    /* CARD BASE */
     .card {
-        background: rgba(5, 42, 61, 0.78);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border-radius: 20px;
-        border: 1px solid rgba(179, 205, 215, 0.25);
-        box-shadow: 0 25px 50px rgba(0,0,0,0.35);
-        transition: all 0.3s ease;
+        background: #ffffff;
+        border-radius: 18px;
+        border: 1px solid rgba(5,42,61,0.12);
+        box-shadow: 0 18px 35px rgba(5,42,61,0.15);
+        transition: all 0.25s ease;
         position: relative;
         overflow: hidden;
     }
 
     .card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 35px 70px rgba(0,0,0,0.45);
+        transform: translateY(-5px);
+        box-shadow: 0 30px 55px rgba(5,42,61,0.25);
     }
 
     /* KPI */
@@ -45,59 +40,97 @@
         font-size: 0.7rem;
         letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: #b3cdd7;
+        color: #052a3d;
+        opacity: 0.7;
         font-weight: 600;
     }
 
     .kpi-value {
         font-size: 2.6rem;
         font-weight: 800;
-        color: #19d1e6;
-        text-shadow: 0 0 18px rgba(25, 209, 230, 0.45);
+        color: #052a3d;
     }
 
-    /* VARIASI CARD */
-    .card-cyan   { border-top: 4px solid #19d1e6; }
-    .card-red    { border-top: 4px solid #e05a5a; }
-    .card-purple { border-top: 4px solid #7aa2c8; }
-    .card-green  { border-top: 4px solid #4fd1c5; }
-    .card-yellow { border-top: 4px solid #f6c177; }
+    /* VARIASI KARTU */
+    .card-cyan {
+        background: linear-gradient(
+            135deg,
+            #19d1e6,
+            #5eeaf2
+        );
+        color: #052a3d;
+    }
 
-    /* TEXT WARNA */
-    .text-cyan-neon   { color: #19d1e6; }
-    .text-red-neon    { color: #e05a5a; }
-    .text-purple-neon { color: #7aa2c8; }
-    .text-green-neon  { color: #4fd1c5; }
-    .text-yellow-neon { color: #f6c177; }
+    .card-teal {
+        background: linear-gradient(
+            135deg,
+            #117192,
+            #19d1e6
+        );
+        color: #ffffff;
+    }
+
+    .card-green {
+        background: linear-gradient(
+            135deg,
+            #2dd4bf,
+            #19d1e6
+        );
+        color: #052a3d;
+    }
+
+    .card-yellow {
+        background: linear-gradient(
+            135deg,
+            #fbbf24,
+            #fde68a
+        );
+        color: #052a3d;
+    }
+
+    .card-red {
+        background: linear-gradient(
+            135deg,
+            #f87171,
+            #fecaca
+        );
+        color: #052a3d;
+    }
+
+    /* TEXT COLOR OVERRIDE */
+    .text-cyan-neon   { color: #052a3d; }
+    .text-red-neon    { color: #7f1d1d; }
+    .text-green-neon  { color: #064e3b; }
+    .text-yellow-neon { color: #78350f; }
 
     /* HEADER */
     header .rounded-3xl {
         background: linear-gradient(
             135deg,
-            #052a3d,
-            #117192
+            #117192,
+            #19d1e6
         );
-        border: 1px solid rgba(179,205,215,0.35);
-        box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+        border: none;
+        box-shadow: 0 40px 70px rgba(5,42,61,0.35);
     }
 
     header h1 {
-        color: #e6f9ff;
-        text-shadow: 0 6px 30px rgba(25,209,230,0.35);
+        color: #ffffff;
+        text-shadow: 0 8px 30px rgba(5,42,61,0.4);
     }
 
     header h2 {
-        color: #b3cdd7;
+        color: #e6f7fb;
     }
 
     /* TABLE */
     thead {
-        background: rgba(179,205,215,0.08);
-        color: #b3cdd7;
+        background: rgba(25,209,230,0.25);
+        color: #052a3d;
     }
 
     tbody tr:hover {
-        background: rgba(179,205,215,0.06);
+        background: rgba(25,209,230,0.18);
     }
 
     /* GLOW DECOR */
@@ -110,10 +143,9 @@
         opacity: 0.35;
         top: -25px;
         right: -25px;
+        background: #ffffff;
     }
 </style>
-
-
 
 <div id="app" class="flex flex-col items-center p-4 sm:p-8">
     
@@ -316,8 +348,9 @@
 
 <script>
     // --- KONFIGURASI CHART.JS GLOBAL UNTUK TEMA GELAP ---
-    Chart.defaults.color = '#b3cdd7';
-    Chart.defaults.borderColor = 'rgba(179,205,215,0.15)';
+    Chart.defaults.color = '#052a3d';
+    Chart.defaults.borderColor = 'rgba(5,42,61,0.15)';
+    Chart.defaults.font.family = 'Inter';
     
     // --- FUNGSI PENGOLAHAN DATA ---
     const params = new URLSearchParams(window.location.search);
@@ -556,16 +589,16 @@
                 {
                     label: 'HPP',
                     data: hppData,
-                    backgroundColor: 'rgba(224, 90, 90, 0.75)',
-                    hoverBackgroundColor: 'rgba(224, 90, 90, 1)',
+                    backgroundColor: 'rgba(248,113,113,0.85)',
+                    hoverBackgroundColor: '#ef4444',
                     stack: 'Stack 0',
                     order: 1,
                 },
                 {
                     label: 'Laba Kotor',
                     data: labaData,
-                    backgroundColor: 'rgba(25, 209, 230, 0.75)',
-                    hoverBackgroundColor: 'rgba(25, 209, 230, 1)',
+                    backgroundColor: 'rgba(25,209,230,0.9)',
+                    hoverBackgroundColor: '#06b6d4',
                     stack: 'Stack 0',
                     order: 2,
                 }
@@ -574,7 +607,7 @@
         options: {
             responsive: true, maintainAspectRatio: false, indexAxis: 'y', 
             scales: {
-                x: { stacked: true, max: maxVal, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: {
+                x: { stacked: true, max: maxVal, grid: { color: 'rgba(5,42,61,0.08)' }, ticks: {
                         callback: function(value) {
                             if (value >= 1000000000) return 'Rp ' + (value / 1000000000).toFixed(1) + ' M';
                             if (value >= 1000000) return 'Rp ' + (value / 1000000).toFixed(0) + ' Jt';
@@ -622,16 +655,14 @@
             datasets: [{
                 data: bebanData,
                 backgroundColor: [
-                    '#19d1e6',
-                    '#117192',
-                    '#4fd1c5',
-                    '#7aa2c8',
-                    '#f6c177',
-                    '#e05a5a',
-                    '#5fb3ce',
-                    '#88d4e3',
-                    '#0e7490',
-                    '#22d3ee'
+                    '#19d1e6', // cyan utama
+                    '#117192', // teal
+                    '#2dd4bf', // mint
+                    '#5eead4', // mint terang
+                    '#38bdf8', // sky
+                    '#fbbf24', // amber (perhatian)
+                    '#f87171', // red (cost tinggi)
+                    '#818cf8'  // violet lembut (variasi)
                 ], 
                 borderWidth: 0,
                 hoverOffset: 10
@@ -640,7 +671,8 @@
         options: {
             responsive: true, maintainAspectRatio: false,
             plugins: { 
-                legend: { position: 'right', labels: { color: '#cbd5e1' } }
+                legend: { position: 'right', labels: { color: '#052a3d' } },
+                tooltip: { backgroundColor: '#ffffff', titleColor: '#052a3d', bodyColor: '#052a3d', borderColor: 'rgba(5,42,61,0.15)', borderWidth: 1 }
             }
         }
     });
@@ -762,6 +794,7 @@
     `;
 
 </script>
+
 
 
 
