@@ -2,112 +2,104 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-    /* Styling Dasar dan Font Inter */
-    body { font-family: 'Inter', sans-serif; }
-    
-    /* 1. BACKGROUND UTAMA: GRADASI MEMUKAU (Deep Emerald -> Black -> Lime Neon) */
-    #app { 
+    body {
+        font-family: 'Inter', sans-serif;
+        background: #F5F3EF;
+        color: #2E2E2E;
+    }
+
+    /* BACKGROUND */
+    #app {
         min-height: 100vh;
-        background-color: #000000;
-        /* Linear Gradient Diagonal (135deg): Deep Emerald -> Hitam -> Lime Neon */
-        background-image: linear-gradient(135deg, #031e13 0%, #022c22 30%, #000000 60%, #60FF00 100%);
-        background-attachment: fixed;
-        color: #e2e8f0;
+        background: linear-gradient(
+            180deg,
+            #F5F3EF 0%,
+            #EFECE6 100%
+        );
     }
 
-    /* Efek Ambient Glow Halus di Tengah */
-    #app::before {
-        content: '';
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle at center, rgba(3, 30, 19, 0.15) 0%, transparent 60%);
-        pointer-events: none;
-        z-index: 0;
-    }
-
-    /* 2. CARD BASE STYLE (Glassmorphism Gelap) */
+    /* CARD */
     .card {
-        background: rgba(15, 15, 15, 0.75); 
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-radius: 20px;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(255, 255, 255, 0.08); 
-        position: relative;
-        overflow: hidden;
-        z-index: 1;
+        background: #FFFFFF;
+        border-radius: 18px;
+        border: 1px solid #E5E1D8;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        transition: all 0.25s ease;
     }
 
-    /* 3. VARIASI WARNA KARTU (Menggunakan Palet Neon Baru) */
-    
-    /* Variasi A: ELECTRIC AQUA (Pemasukan) */
-    .card-cyan { border-top: 4px solid #00FFFF; }
-    .card-cyan:hover {
-        box-shadow: 0 0 30px rgba(0, 255, 255, 0.15);
-        border-color: rgba(0, 255, 255, 0.4);
-        transform: translateY(-5px);
-    }
-    .text-cyan-neon { color: #00FFFF; text-shadow: 0 0 15px rgba(0, 255, 255, 0.4); }
-
-    /* Variasi B: NEON CRIMSON (Pengeluaran) */
-    .card-red { border-top: 4px solid #FF1053; }
-    .card-red:hover {
-        box-shadow: 0 0 30px rgba(255, 16, 83, 0.15);
-        border-color: rgba(255, 16, 83, 0.4);
-        transform: translateY(-5px);
-    }
-    .text-red-neon { color: #FF1053; text-shadow: 0 0 15px rgba(255, 16, 83, 0.4); }
-
-    /* Variasi C: ELECTRIC VIOLET (Arus Kas) */
-    .card-purple { border-top: 4px solid #D400FF; }
-    .card-purple:hover {
-        box-shadow: 0 0 30px rgba(212, 0, 255, 0.15);
-        border-color: rgba(212, 0, 255, 0.4);
-        transform: translateY(-5px);
-    }
-    .text-purple-neon { color: #D400FF; text-shadow: 0 0 15px rgba(212, 0, 255, 0.4); }
-
-    /* Variasi D: LAWN GREEN (Laba) */
-    .card-green { border-top: 4px solid #60FF00; }
-    .card-green:hover {
-        box-shadow: 0 0 30px rgba(96, 255, 0, 0.15);
-        border-color: rgba(96, 255, 0, 0.4);
-        transform: translateY(-5px);
-    }
-    .text-green-neon { color: #60FF00; text-shadow: 0 0 15px rgba(96, 255, 0, 0.4); }
-
-    /* Variasi E: PURE AMBER (Hutang/Piutang) */
-    .card-yellow { border-top: 4px solid #FFC700; }
-    .card-yellow:hover {
-        box-shadow: 0 0 30px rgba(255, 199, 0, 0.15);
-        border-color: rgba(255, 199, 0, 0.4);
-        transform: translateY(-5px);
-    }
-    .text-yellow-neon { color: #FFC700; text-shadow: 0 0 15px rgba(255, 199, 0, 0.4); }
-
-
-    /* Typography & Utilities */
-    .kpi-label { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.7; font-weight: 600; }
-    .kpi-value { font-size: 2.5rem; font-weight: 800; }
-    
-    /* Efek Ambient Light di pojok kartu */
-    .glow-blob {
-        position: absolute;
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        filter: blur(50px);
-        opacity: 0.2;
-        z-index: 0;
-        top: -20px;
-        right: -20px;
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 35px rgba(0,0,0,0.08);
     }
 
+    /* KPI */
+    .kpi-label {
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #7A7A7A;
+        font-weight: 600;
+    }
+
+    .kpi-value {
+        font-size: 2.4rem;
+        font-weight: 800;
+        color: #2E2E2E;
+    }
+
+    /* VARIASI WARNA CARD */
+    .card-cyan   { border-top: 4px solid #7A8F7A; }
+    .card-red    { border-top: 4px solid #C96A6A; }
+    .card-purple { border-top: 4px solid #9A8C98; }
+    .card-green  { border-top: 4px solid #9AA17B; }
+    .card-yellow { border-top: 4px solid #B08968; }
+
+    /* TEXT COLOR */
+    .text-cyan-neon   { color: #7A8F7A; }
+    .text-red-neon    { color: #C96A6A; }
+    .text-purple-neon { color: #9A8C98; }
+    .text-green-neon  { color: #9AA17B; }
+    .text-yellow-neon { color: #B08968; }
+
+    /* HEADER */
+    header .rounded-3xl {
+        background: linear-gradient(
+            135deg,
+            #EAE6DC,
+            #F5F3EF
+        );
+        border: 1px solid #E5E1D8;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    }
+
+    header h1 {
+        color: #2E2E2E;
+    }
+
+    header h2 {
+        color: #7A8F7A;
+    }
+
+    /* TABLE */
+    table {
+        color: #444;
+    }
+
+    thead {
+        background: #F1EFEA;
+        color: #666;
+    }
+
+    tbody tr:hover {
+        background: #F6F4EE;
+    }
+
+    /* CHART LEGEND */
+    .chartjs-render-monitor {
+        color: #555;
+    }
 </style>
+
 
 <div id="app" class="flex flex-col items-center p-4 sm:p-8">
     
@@ -747,5 +739,6 @@
     `;
 
 </script>
+
 
 
